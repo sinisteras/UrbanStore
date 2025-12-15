@@ -49,6 +49,7 @@ const allProducts = [
         // مثال: 3 صور لنفس السويتر
         gallery: ["images/sweater.jpg", "images/sweater_red.jpg", "images/sweater_yellow.jpg"]
     },
+    {
     id: 5,
         name: "بنطلون رسمي",
         price: 20000,
@@ -57,7 +58,7 @@ const allProducts = [
         sizes: ["30","31", "32", "33","34"],
         colors: ["اسود"],
         gallery: ["images/pant.jpg"]
-];
+    };
 
 // ==========================================
 // 🛒 2. نظام السلة (كما هو)
@@ -286,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 function logoutUser() { localStorage.removeItem('isLoggedIn'); window.location.href = 'index.html'; }
+
 
 
 
