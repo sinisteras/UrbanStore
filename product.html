@@ -3,46 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفاصيل المنتج</title>
+    <title>تفاصيل المنتج - Urban Gent</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <header>
-        <h1>Urban Gent</h1>
+        <div class="brand">
+            <img src="images/logo.png" onerror="this.style.display='none'" alt="شعار المتجر" width="50"> 
+            <h1>Urban Gent</h1>
+        </div>
+
         <nav>
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="cart.html">السلة</a></li>
+                
+                <span id="guest-links" style="display: flex; gap: 15px;">
+                    <li><a href="signup.html" class="login-btn">حساب جديد</a></li>
+                    <li><a href="login.html" class="login-btn">دخول</a></li>
+                </span>
+
+                <span id="user-links" style="display: none; align-items: center; gap: 15px;">
+                    <li style="color: #1abc9c; font-weight: bold;">أهلاً <span id="user-name-display"></span></li>
+                    <li><a href="#" onclick="logoutUser()" style="color: red; cursor: pointer;">خروج</a></li>
+                </span>
             </ul>
         </nav>
-        <div id="cart-container"><a href="cart.html" style="color:white">🛒 <span id="cart-count">0</span></a></div>
+        
+        <div id="cart-container">
+            <a href="cart.html" style="text-decoration: none; color: white;">
+                🛒 <span id="cart-count">0</span>
+            </a>
+        </div>
     </header>
 
-    <main style="display: flex; gap: 40px; align-items: flex-start; margin-top: 50px;">
-       <div style="flex: 1; text-align: center;">
+    <main style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-top: 50px; padding: 0 20px;">
+        
+        <div style="flex: 1; min-width: 300px; text-align: center;">
             <img id="p-img" src="" alt="صورة المنتج" style="width: 100%; border-radius: 10px; border: 1px solid #ddd; object-fit: cover;">
             
-            <div id="thumbnails-container" style="display: flex; gap: 10px; margin-top: 15px; justify-content: center; overflow-x: auto;">
-                </div>
+            <div id="thumbnails-container" style="display: flex; gap: 10px; margin-top: 15px; justify-content: center; overflow-x: auto;"></div>
         </div>
 
-        <div style="flex: 1;">
-            <h2 id="p-name" style="font-size: 2em; margin-top: 0;"></h2>
-            <p id="p-desc" style="color: #666; font-size: 1.1em; margin: 20px 0;"></p>
-           <h3 id="p-price" style="color: #1abc9c; font-size: 1.5em;"></h3>
+        <div style="flex: 1; min-width: 300px;">
+            <h2 id="p-name" style="font-size: 2em; margin-top: 0; color: #2c3e50;"></h2>
+            <p id="p-desc" style="color: #666; font-size: 1.1em; margin: 20px 0; line-height: 1.6;"></p>
+            <h3 id="p-price" style="color: #1abc9c; font-size: 1.5em; font-weight: bold;"></h3>
             
             <div id="options-container" style="margin: 20px 0;"></div>
-            <button id="add-btn" style="background: #2c3e50; color: white; padding: 15px 30px; border: none; font-size: 1.2em; cursor: pointer; border-radius: 5px; margin-top: 20px;">
+            
+            <button id="add-btn" style="background: #2c3e50; color: white; padding: 15px 30px; border: none; font-size: 1.2em; cursor: pointer; border-radius: 5px; margin-top: 20px; width: 100%; transition: background 0.3s;">
                 أضف للسلة
             </button>
-            <button id="add-btn" style="background: #2c3e50; color: white; padding: 15px 30px; border: none; font-size: 1.2em; cursor: pointer; border-radius: 5px; margin-top: 20px;">
-                أضف للسلة
-            </button>
+            
             <br><br>
-            <a href="index.html" style="text-decoration: underline;">العودة للتسوق</a>
+            <div style="margin-top: 20px;">
+                <a href="index.html" style="text-decoration: underline; color: #7f8c8d;">&larr; العودة للتسوق</a>
+            </div>
         </div>
     </main>
+
+    <footer style="background: #2c3e50; color: white; padding: 40px 20px; margin-top: 50px;">
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: right;">
+            <div>
+                <h3>Urban Gent</h3>
+                <p>وجهتك الأولى للأناقة الرجالية.</p>
+            </div>
+            <div>
+                <h3>روابط سريعة</h3>
+                <ul style="line-height: 2;">
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="cart.html">السلة</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>تواصل معنا</h3>
+                <p>📞 07724329890</p>
+                <p>📍 بغداد، العراق</p>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 30px; border-top: 1px solid #555; padding-top: 20px;">&copy; 2025 Urban Gent. جميع الحقوق محفوظة.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
