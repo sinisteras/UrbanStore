@@ -50,7 +50,7 @@ const allProducts = [
         gallery: ["images/sweater.jpg", "images/sweater_red.jpg", "images/sweater_yellow.jpg"]
     },
     id: 5,
-        name: "Fبنطلون",
+        name: "بنطلون رسمي",
         price: 20000,
         image: "images/pant.jpg",
         description: "بنطلون قماش رسمي.",
@@ -286,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 function logoutUser() { localStorage.removeItem('isLoggedIn'); window.location.href = 'index.html'; }
+
 
 
 
