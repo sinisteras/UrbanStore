@@ -1,0 +1,206 @@
+/* تنسيقات عامة لتصفير الإعدادات الافتراضية */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* خلفية خفيفة */
+    color: #333;
+    direction: rtl; /* لضمان دعم اللغة العربية */
+    text-align: right;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+header {
+    background-color: #000; /* خلفية سوداء */
+    color: #fff;
+    padding: 20px;
+    display: flex; /* لترتيب العناصر جنبًا إلى جنب */
+    justify-content: space-between; /* تباعد بين العنوان والقائمة */
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+nav ul {
+    display: flex;
+    gap: 20px; /* مسافة بين الروابط */
+}
+
+nav a {
+    color: #fff;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ffcc00; /* تغيير اللون عند المرور بالفأرة */
+}
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+main h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+/* تنسيق لعرض المنتجات في شبكة */
+main {
+    display: flex;
+    flex-wrap: wrap; /* للسماح للمنتجات بالانتقال إلى سطر جديد */
+    gap: 30px; /* مسافة بين البطاقات */
+    justify-content: center;
+}
+
+.product-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 300px; /* عرض البطاقة */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* تأثير رفع بسيط عند المرور */
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    margin: 10px 0 5px;
+    font-size: 1.3em;
+}
+
+.product-card .price {
+    color: #b12704; /* لون مميز للسعر */
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.product-card button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.product-card button:hover {
+    background-color: #0056b3;
+}
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+    font-size: 0.9em;
+}
+/* Media Query للأجهزة اللوحية (أقصى عرض 768px) */
+@media (max-width: 768px) {
+    
+    /* جعل العنوان والقائمة يظهران على سطرين لزيادة المساحة */
+    header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    nav ul {
+        margin-top: 15px;
+        gap: 10px; /* تقليل المسافة بين الروابط */
+    }
+
+    /* تعديل عرض بطاقات المنتجات */
+    .product-card {
+        width: 45%; /* لعرض بطاقتين تقريباً في السطر */
+    }
+
+    /* ضمان تباعد مناسب بين بطاقات المنتجات في الشاشات المتوسطة */
+    main {
+        gap: 20px;
+    }
+}
+/* Media Query للهواتف الذكية (أقصى عرض 480px) */
+@media (max-width: 480px) {
+    
+    /* عرض المنتج بعرض كامل تقريبا */
+    .product-card {
+        width: 90%; 
+    }
+    
+    /* تنسيق أزرار السلة لتكون أكبر وأكثر وضوحاً */
+    .product-card button {
+        width: 100%;
+        padding: 12px 0;
+        font-size: 1.1em;
+    }
+
+    /* تقليل المسافات البادئة */
+    header, main, footer {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* إخفاء بعض العناصر غير الضرورية إذا أردت (مثال) */
+    nav {
+        display: none; /* يمكن إخفاء قائمة التنقل التقليدية واستبدالها بزر "قائمة" (Hamburger Menu) لاحقاً */
+    }
+}
+body {
+    /* ... الأكواد السابقة ... */
+    line-height: 1.6; /* زيادة تباعد الأسطر لقراءة أسهل */
+}
+/* أضف هذا إلى تنسيق الزر (.product-card button) */
+.product-card button {
+    /* ... الأكواد السابقة ... */
+    transition: all 0.3s ease; /* إضافة سلاسة لكل التغييرات */
+}
+
+/* أضف هذا إلى تنسيق الروابط (nav a) */
+nav a {
+    /* ... الأكواد السابقة ... */
+    transition: color 0.3s;
+}
+#cart-container {
+    font-size: 1.5em;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    padding: 0 15px; /* مسافة على الجانبين */
+}
+
+#cart-count {
+    background-color: #ffcc00; /* لون العداد */
+    color: #000;
+    font-size: 0.6em;
+    padding: 3px 8px;
+    border-radius: 50%; /* لجعلها دائرة */
+    position: absolute;
+    top: -5px;
+    left: 25px; /* وضع العداد فوق أيقونة السلة */
+    font-weight: bold;
+}
