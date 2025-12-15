@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المنتج</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Urban Gent</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="cart.html">السلة</a></li>
+            </ul>
+        </nav>
+        <div id="cart-container"><a href="cart.html" style="color:white">🛒 <span id="cart-count">0</span></a></div>
+    </header>
+
+    <main style="display: flex; gap: 40px; align-items: flex-start; margin-top: 50px;">
+        <div style="flex: 1;">
+            <img id="p-img" src="" alt="صورة المنتج" style="width: 100%; border-radius: 10px; border: 1px solid #ddd;">
+        </div>
+
+        <div style="flex: 1;">
+            <h2 id="p-name" style="font-size: 2em; margin-top: 0;"></h2>
+            <p id="p-desc" style="color: #666; font-size: 1.1em; margin: 20px 0;"></p>
+            <h3 id="p-price" style="color: #1abc9c; font-size: 1.5em;"></h3>
+            
+            <button id="add-btn" style="background: #2c3e50; color: white; padding: 15px 30px; border: none; font-size: 1.2em; cursor: pointer; border-radius: 5px; margin-top: 20px;">
+                أضف للسلة
+            </button>
+            <br><br>
+            <a href="index.html" style="text-decoration: underline;">العودة للتسوق</a>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
