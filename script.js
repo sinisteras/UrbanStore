@@ -1,11 +1,18 @@
-// --- 1. قاعدة بيانات المنتجات (الأساس) ---
+// ==========================================
+// ⚙️ إعدادات المتجر العامة
+// ==========================================
+const MY_PHONE_NUMBER = "9647700000000"; // 🔴 ضع رقمك هنا
+
+// ==========================================
+// 📦 1. قاعدة بيانات المنتجات
+// ==========================================
 const allProducts = [
     {
         id: 1,
         name: "بدلة رسمية سوداء",
         price: 150000,
         image: "images/suit.jpg",
-        description: "بدلة رسمية فاخرة مصنوعة من أجود أنواع الأقمشة الإيطالية. مناسبة للحفلات والاجتماعات الرسمية."
+        description: "بدلة رسمية فاخرة مصنوعة من أجود أنواع الأقمشة. مناسبة للحفلات والاجتماعات الرسمية."
     },
     {
         id: 2,
@@ -23,17 +30,23 @@ const allProducts = [
     }
 ];
 
-// --- 2. إدارة السلة والمستخدم ---
+// ==========================================
+// 🛒 2. نظام السلة (Cart System)
+// ==========================================
 let cart = JSON.parse(localStorage.getItem('myCart')) || [];
 
-// تحديث أيقونة السلة في الهيدر
+// تحديث أيقونة السلة فوراً عند التحميل
+updateCartIcon();
+
 function updateCartIcon() {
     const countEl = document.getElementById('cart-count');
-    if (countEl) countEl.textContent = cart.reduce((total, item) => total + item.qty, 0);
+    if (countEl) {
+        // حساب مجموع القطع وليس فقط عدد الأنواع
+        const totalQty = cart.reduce((total, item) => total + item.qty, 0);
+        countEl.textContent = totalQty;
+    }
 }
-updateCartIcon(); // تشغيل عند التحميل
 
-// وظيفة الإضافة للسلة
 function addToCart(productId) {
     const product = allProducts.find(p => p.id === productId);
     const existingItem = cart.find(item => item.id === productId);
@@ -44,12 +57,57 @@ function addToCart(productId) {
         cart.push({ ...product, qty: 1 });
     }
     
+    // الحفظ في الذاكرة
     localStorage.setItem('myCart', JSON.stringify(cart));
     updateCartIcon();
-    alert('تمت الإضافة للسلة بنجاح!');
+    alert('تمت الإضافة للسلة بنجاح! ✅');
 }
 
-// --- 3. منطق الصفحة الرئيسية (index.html) ---
+// ==========================================
+// 👤 3. نظام تسجيل الدخول (Login System)
+// ==========================================
+// تشغيل التحقق من المستخدم في كل الصفحات عند التحميل
+document.addEventListener('DOMContentLoaded', checkLoginState);
+
+function checkLoginState() {
+    // جلب البيانات من الذاكرة الدائمة
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userName = localStorage.getItem('userName');
+
+    // تحديد العناصر في HTML
+    const guestLinks = document.getElementById('guest-links');
+    const userLinks = document.getElementById('user-links');
+    const userNameDisplay = document.getElementById('user-name-display');
+
+    // إذا لم تكن العناصر موجودة (مثلاً في صفحة السلة)، نتوقف
+    if (!guestLinks || !userLinks) return;
+
+    if (isLoggedIn === 'true' && userName) {
+        // ✅ المستخدم مسجل دخول
+        guestLinks.style.display = 'none';
+        userLinks.style.display = 'flex';
+        if(userNameDisplay) userNameDisplay.textContent = userName;
+    } else {
+        // ❌ المستخدم زائر
+        guestLinks.style.display = 'flex';
+        userLinks.style.display = 'none';
+    }
+}
+
+// دالة تسجيل الخروج
+function logoutUser() {
+    // مسح مفتاح الدخول فقط، مع الاحتفاظ بالسلة
+    localStorage.removeItem('isLoggedIn'); 
+    alert('تم تسجيل الخروج. نراك قريباً! 👋');
+    window.location.href = 'index.html'; // العودة للرئيسية
+}
+
+
+// ==========================================
+// 📄 4. منطق الصفحات (Router Logic)
+// ==========================================
+
+// --- الصفحة الرئيسية (index.html) ---
 if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/')) {
     const grid = document.querySelector('.products-grid');
     if (grid) {
@@ -68,7 +126,7 @@ function goToProduct(id) {
     window.location.href = `product.html?id=${id}`;
 }
 
-// --- 4. منطق صفحة المنتج (product.html) ---
+// --- صفحة تفاصيل المنتج (product.html) ---
 if (window.location.pathname.includes('product.html')) {
     const params = new URLSearchParams(window.location.search);
     const id = parseInt(params.get('id'));
@@ -83,7 +141,7 @@ if (window.location.pathname.includes('product.html')) {
     }
 }
 
-// --- 5. منطق صفحة السلة (cart.html) ---
+// --- صفحة السلة (cart.html) ---
 if (window.location.pathname.includes('cart.html')) {
     renderCartPage();
 }
@@ -95,7 +153,7 @@ function renderCartPage() {
     if (!container) return;
 
     if (cart.length === 0) {
-        container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">السلة فارغة</td></tr>';
+        container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px;">السلة فارغة 🛒</td></tr>';
         totalEl.textContent = '0';
         return;
     }
@@ -105,22 +163,25 @@ function renderCartPage() {
         total += item.price * item.qty;
         return `
             <tr>
-                <td><img src="${item.image}" width="50"></td>
+                <td><img src="${item.image}" width="50" style="border-radius:5px;"></td>
                 <td>${item.name}</td>
                 <td>${item.price.toLocaleString()}</td>
                 <td>
-                    <button onclick="changeQty(${index}, -1)">-</button>
-                    <span>${item.qty}</span>
-                    <button onclick="changeQty(${index}, 1)">+</button>
+                    <div style="display:flex; justify-content:center; gap:5px;">
+                        <button onclick="changeQty(${index}, -1)" style="padding:2px 8px;">-</button>
+                        <span>${item.qty}</span>
+                        <button onclick="changeQty(${index}, 1)" style="padding:2px 8px;">+</button>
+                    </div>
                 </td>
-                <td><button onclick="removeItem(${index})" style="background:red; padding:5px 10px;">X</button></td>
+                <td><button onclick="removeItem(${index})" style="background:#e74c3c; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer;">&times;</button></td>
             </tr>
         `;
     }).join('');
 
-    // التحقق من كود الخصم
+    // حساب الخصم
     const discount = localStorage.getItem('discount') || 0;
     const finalTotal = total - (total * discount);
+    
     totalEl.textContent = finalTotal.toLocaleString();
 }
 
@@ -141,24 +202,32 @@ function removeItem(index) {
 
 function applyCoupon() {
     const code = document.getElementById('coupon-code').value;
-    if (code === 'IQ2025') { // كود الخصم السري
-        localStorage.setItem('discount', 0.10); // خصم 10%
-        alert('تم تفعيل خصم 10%!');
+    if (code === 'IQ2025') {
+        localStorage.setItem('discount', 0.10);
+        alert('تم تفعيل خصم 10% بنجاح! 🎉');
         renderCartPage();
     } else {
-        alert('كود غير صحيح');
+        alert('كود الخصم غير صحيح ❌');
     }
 }
 
 function checkoutWhatsApp() {
+    if (cart.length === 0) return alert('السلة فارغة!');
+
     let msg = "مرحباً، أريد إتمام الطلب:%0a";
     let total = 0;
+    
     cart.forEach(item => {
         msg += `- ${item.name} (عدد ${item.qty})%0a`;
         total += item.price * item.qty;
     });
-    msg += `%0aالإجمالي: ${document.getElementById('final-total').textContent} د.ع`;
+
+    const discount = localStorage.getItem('discount') || 0;
+    if(discount > 0) {
+         msg += `%0a🔖 تم تطبيق خصم 10%`;
+    }
+
+    msg += `%0a💰 *الإجمالي النهائي: ${document.getElementById('final-total').textContent} د.ع*`;
     
-    // غير الرقم هنا لرقمك
-    window.open(`https://wa.me/9647724329890?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
 }
