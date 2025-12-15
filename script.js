@@ -1,7 +1,7 @@
 // ==========================================
 // ⚙️ إعدادات المتجر
 // ==========================================
-const MY_PHONE_NUMBER = "9647724329890"; // 🔴 ضع رقمك
+const MY_PHONE_NUMBER = "9647724329890"; // ✅ رقمك محفوظ
 
 // ==========================================
 // 📦 1. قاعدة البيانات (مع دعم الصور المتعددة)
@@ -11,11 +11,10 @@ const allProducts = [
         id: 1,
         name: "بدلة رسمية سوداء",
         price: 150000,
-        image: "images/suit.jpg", // الصورة الرئيسية (للواجهة والسلة)
+        image: "images/suit.jpg",
         description: "بدلة رسمية فاخرة.",
         sizes: ["48", "50", "52"], 
         colors: ["أسود"],
-        // 🆕 صور إضافية (اختياري)
         gallery: ["images/suit.jpg", "images/suit_back.jpg", "images/suit_fabric.jpg"]
     },
     {
@@ -26,7 +25,7 @@ const allProducts = [
         description: "قميص قطني 100%.",
         sizes: ["M", "L", "XL"],
         colors: [],
-        gallery: ["images/shirt.jpg","images/shirt2.jpg"] // لا توجد صور إضافية
+        gallery: ["images/shirt.jpg","images/shirt2.jpg"]
     },
     {
         id: 3,
@@ -46,11 +45,10 @@ const allProducts = [
         description: "سويتر صوف دافئ.",
         sizes: ["M", "L", "XL"],
         colors: ["رمادي", "أحمر", "أصفر"],
-        // مثال: 3 صور لنفس السويتر
         gallery: ["images/sweater.jpg", "images/sweater_red.jpg", "images/sweater_yellow.jpg"]
     },
-    {
-    id: 5,
+    {   // 🔴 تم التصحيح: أضفنا القوس هنا
+        id: 5,
         name: "بنطلون رسمي",
         price: 20000,
         image: "images/pant.jpg",
@@ -58,7 +56,8 @@ const allProducts = [
         sizes: ["30","31", "32", "33","34"],
         colors: ["اسود"],
         gallery: ["images/pant.jpg"]
-    };
+    }   // 🔴 وأغلقنا القوس هنا
+];
 
 // ==========================================
 // 🛒 2. نظام السلة (كما هو)
@@ -287,8 +286,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 function logoutUser() { localStorage.removeItem('isLoggedIn'); window.location.href = 'index.html'; }
-
-
-
-
-
