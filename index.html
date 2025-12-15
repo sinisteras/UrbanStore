@@ -11,38 +11,39 @@
 
     <header>
         <div class="brand">
-            <img src="images/logo.png" alt="شعار المتجر" width="50"> 
-           <h1>Urban Gent</h1>
+            <img src="images/logo.png" onerror="this.style.display='none'" alt="شعار المتجر" width="50"> 
+            <h1>Urban Gent</h1>
         </div>
 
         <nav>
-          <nav>
-           <nav>
-    <ul>
-        <li><a href="index.html">الرئيسية</a></li>
-        <span id="guest-links" style="display: flex; gap: 15px;">
-            <li><a href="signup.html" class="login-btn">حساب جديد</a></li>
-            <li><a href="login.html" class="login-btn">دخول</a></li>
-        </span>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                
+                <span id="guest-links" style="display: flex; gap: 15px;">
+                    <li><a href="signup.html" class="login-btn">حساب جديد</a></li>
+                    <li><a href="login.html" class="login-btn">دخول</a></li>
+                </span>
 
-        <span id="user-links" style="display: none; align-items: center; gap: 15px;">
-            <li style="color: #1abc9c; font-weight: bold;">أهلاً <span id="user-name-display"></span></li>
-            <li><a href="#" onclick="logoutUser()" style="color: red; cursor: pointer;">خروج</a></li>
-        </span>
-    </ul>
-</nav>
-        </nav>
+                <span id="user-links" style="display: none; align-items: center; gap: 15px;">
+                    <li style="color: #1abc9c; font-weight: bold;">أهلاً <span id="user-name-display"></span></li>
+                    <li><a href="#" onclick="logoutUser()" style="color: red; cursor: pointer;">خروج</a></li>
+                </span>
+            </ul>
         </nav>
         
-       <div id="cart-container" onclick="checkout()" style="cursor: pointer;">
-    🛒 <span id="cart-count">0</span>
-</div>
+        <div id="cart-container">
+            <a href="cart.html" style="text-decoration: none; color: white;">
+                🛒 <span id="cart-count">0</span>
+            </a>
+        </div>
     </header>
-<section class="hero" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/banner.jpg'); background-size: cover; background-position: center; color: white; text-align: center; padding: 100px 20px; margin-bottom: 30px;">
-    <h1 style="font-size: 3em; margin-bottom: 10px;">أناقتك.. تتحدث عنك</h1>
-    <p style="font-size: 1.2em; margin-bottom: 20px;">اكتشف أحدث صيحات الموضة الرجالية بأسعار تنافسية</p>
-    <button onclick="document.querySelector('.products-grid').scrollIntoView({behavior: 'smooth'})" style="padding: 15px 30px; background: #1abc9c; color: white; border: none; font-size: 1.1em; cursor: pointer; border-radius: 5px;">تسوق الآن</button>
-</section>
+
+    <section class="hero" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/banner.jpg'); background-size: cover; background-position: center; color: white; text-align: center; padding: 100px 20px; margin-bottom: 30px;">
+        <h1 style="font-size: 3em; margin-bottom: 10px;">أناقتك.. تتحدث عنك</h1>
+        <p style="font-size: 1.2em; margin-bottom: 20px;">اكتشف أحدث صيحات الموضة الرجالية بأسعار تنافسية</p>
+        <button onclick="document.querySelector('.products-grid').scrollIntoView({behavior: 'smooth'})" style="padding: 15px 30px; background: #1abc9c; color: white; border: none; font-size: 1.1em; cursor: pointer; border-radius: 5px;">تسوق الآن</button>
+    </section>
+
     <main>
         <h2>تـشكيلة الموسم للرجال</h2>
         
@@ -50,41 +51,32 @@
         
     </main>
 
-  <footer style="background: #2c3e50; color: white; padding: 40px 20px; margin-top: 50px;">
-    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: right;">
-        
-        <div>
-            <h3>Urban Gent</h3>
-            <p>وجهتك الأولى للأناقة الرجالية في العراق.</p>
-        </div>
+    <footer style="background: #2c3e50; color: white; padding: 40px 20px; margin-top: 50px;">
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: right;">
+            
+            <div>
+                <h3>Urban Gent</h3>
+                <p>وجهتك الأولى للأناقة الرجالية في العراق.</p>
+            </div>
 
-        <div>
-            <h3>روابط سريعة</h3>
-            <ul style="line-height: 2;">
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="cart.html">سلة المشتريات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-            </ul>
-        </div>
+            <div>
+                <h3>روابط سريعة</h3>
+                <ul style="line-height: 2;">
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="cart.html">سلة المشتريات</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                </ul>
+            </div>
 
-        <div>
-            <h3>تواصل معنا</h3>
-            <p>📞 07700000000</p>
-            <p>📍 بغداد، العراق</p>
+            <div>
+                <h3>تواصل معنا</h3>
+                <p>📞 07700000000</p>
+                <p>📍 بغداد، العراق</p>
+            </div>
         </div>
-    </div>
-    <p style="text-align: center; margin-top: 30px; border-top: 1px solid #555; padding-top: 20px;">&copy; 2025 Urban Gent. جميع الحقوق محفوظة.</p>
-</footer>
+        <p style="text-align: center; margin-top: 30px; border-top: 1px solid #555; padding-top: 20px;">&copy; 2025 Urban Gent. جميع الحقوق محفوظة.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
