@@ -310,15 +310,18 @@ function applyCoupon() {
         localStorage.setItem('discount', 0);
         renderCartPage();
     }
-}
 
 // تسجيل الدخول والحسابات
 document.addEventListener('DOMContentLoaded', () => {
     const user = localStorage.getItem('userName');
-    if (user && document.getElementById('user-name-display')) {
-        document.getElementById('guest-links').style.display = 'none';
-        document.getElementById('user-links').style.display = 'flex';
-        document.getElementById('user-name-display').textContent = user;
+    if (user) {
+        // إظهار روابط المستخدم وإخفاء روابط الضيف
+        if(document.getElementById('guest-links')) document.getElementById('guest-links').style.display = 'none';
+        if(document.getElementById('user-links')) document.getElementById('user-links').style.display = 'flex';
+        
+        // عرض الاسم/الرقم في الهيدر
+        const nameDisplay = document.getElementById('user-name-display');
+        if (nameDisplay) nameDisplay.textContent = user;
     }
 });
 
@@ -357,3 +360,4 @@ function logoutUser() {
     localStorage.removeItem('userName');
     window.location.href = 'index.html'; 
 }
+
