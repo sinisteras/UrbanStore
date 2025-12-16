@@ -52,7 +52,36 @@ const allProducts = [
         ],
         gallery: ["images/shoes.jpg", "images/shoes2.jpg"]
     }
-    // يمكنك إضافة باقي المنتجات هنا بنفس التنسيق
+    {
+        id: 4,
+        name: "سويتر شتوي",
+        price: 25000,
+        image: "images/sweater.jpg",
+        description: "سويتر صوف دافئ.",
+        sizes: ["M", "L", "XL"],
+        colors: ["رمادي", "أحمر", "أصفر"],
+        inventory: [
+            { size: "M", color: "رمادي", stock: 6 },
+            { size: "L", color: "أحمر", stock: 0 }
+        ],
+        gallery: ["images/sweater.jpg", "images/sweater_red.jpg", "images/sweater_yellow.jpg"]
+    },
+
+    {
+        id: 5,
+        name: "بنطلون رسمي",
+        price: 20000,
+        image: "images/pant.jpg",
+        description: "بنطلون قماش رسمي فاخر.",
+        sizes: ["30", "32", "34"],
+        colors: ["اسود"],
+        inventory: [
+            { size: "30", color: "اسود", stock: 4 },
+            { size: "32", color: "اسود", stock: 2 },
+            { size: "34", color: "اسود", stock: 0 }
+        ],
+        gallery: ["images/pant.jpg"]
+    }
 ];
 
 // ==========================================
@@ -227,3 +256,4 @@ function logoutUser() {
     alert("تم تسجيل الخروج");
     window.location.href = 'index.html';
 }
+
