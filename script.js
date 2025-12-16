@@ -344,44 +344,49 @@ function updateCartButtons() {
 }
 
 // --- إتمام الطلب ---
-function checkoutWhatsApp() {
+// أضف async قبل كلمة function
+async function checkoutWhatsApp() {
     const user = localStorage.getItem('userName');
     if (!user) return alert("يرجى تسجيل الدخول أولاً 🔐");
     if (cart.length === 0) return alert('السلة فارغة!');
 
     const finalTotal = document.getElementById('final-total').textContent;
 
-    // --- 1. تجهيز بيانات الطلب للسجل ---
+    // --- (الخطوة الثالثة: حفظ الطلب في السحابة) ---
     const orderData = {
-        date: new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }),
-        items: cart.map(item => `${item.name} (${item.qty})`), // تحويل المنتجات لنصوص
-        total: finalTotal
+        customerName: user,
+        date: new Date().toLocaleString('ar-EG'),
+        items: cart.map(item => `${item.name} (${item.size}/${item.color}) عدد: ${item.qty}`),
+        total: finalTotal,
+        status: "قيد المراجعة"
     };
 
-    // --- 2. حفظ في سجل الطلبات (orderHistory) ---
-    let history = JSON.parse(localStorage.getItem('orderHistory')) || [];
-    history.push(orderData);
-    localStorage.setItem('orderHistory', JSON.stringify(history));
+    try {
+        // هنا نقوم بحفظ الطلب في Firebase قبل فتح الواتساب
+        await addDoc(collection(db, "orders"), orderData);
+        console.log("تم تسجيل الطلب في السحابة بنجاح ✅");
+    } catch (error) {
+        console.error("فشل الحفظ في السحابة: ", error);
+        // حتى لو فشل الحفظ في السحابة، سنسمح بفتح الواتساب لكي لا يضيع الطلب
+    }
+    // ------------------------------------------
 
-    // --- 3. إعداد رسالة الواتساب ---
+    // بقية كود الواتساب الخاص بك...
     let msg = `🛍️ *طلب جديد من Urban Gent*%0a`;
     msg += `👤 *الزبون:* ${user}%0a`;
     msg += `--------------------------%0a`;
-
     cart.forEach((item, i) => {
-        msg += `${i+1}. *${item.name}*%0a القياس: ${item.size} | اللون: ${item.color}%0a الكمية: ${item.qty}%0a%0a`;
+        msg += `${i+1}. *${item.name}* (${item.size}/${item.color}) عدد: ${item.qty}%0a`;
     });
+    msg += `%0a💰 *الإجمالي: ${finalTotal} د.ع*`;
 
-    msg += `💰 *الإجمالي النهائي: ${finalTotal} د.ع*`;
-    
-    // --- 4. تفريغ السلة وتوجيه المستخدم ---
+    // تفريغ السلة وتوجيه المستخدم
     localStorage.removeItem('myCart');
     cart = [];
     updateCartIcon();
 
-    // فتح واتساب
     window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
-
+}
     // توجيه الزبون لصفحة ملفه الشخصي لرؤية الطلب في السجل
     setTimeout(() => {
         window.location.href = 'profile.html';
@@ -435,6 +440,7 @@ function applyCoupon() {
         renderCartPage();
     }
 }
+
 
 
 
