@@ -330,50 +330,48 @@ function updateCartButtons() {
 
 // --- إتمام الطلب ---
 function checkoutWhatsApp() {
-    const userPhone = localStorage.getItem('userPhone'); // نحتاج رقم الهاتف لربط الطلب بصاحبه
-    const userName = localStorage.getItem('userName');
-    if (!userName) return alert("يرجى تسجيل الدخول أولاً");
+    const user = localStorage.getItem('userName');
+    if (!user) return alert("يرجى تسجيل الدخول أولاً 🔐");
     if (cart.length === 0) return alert('السلة فارغة!');
 
     const finalTotal = document.getElementById('final-total').textContent;
 
-    // --- الجزء الجديد: حفظ الطلب في سجل الموقع ---
-    let allOrders = JSON.parse(localStorage.getItem('all_orders')) || [];
-    
-    const newOrder = {
-        id: Date.now(), // رقم مميز للطلب
-        customerPhone: userPhone,
-        customerName: userName,
-        items: [...cart], // نسخة من المنتجات
-        total: finalTotal,
-        date: new Date().toLocaleDateString('ar-EG'),
-        status: "قيد الانتظار"
+    // --- 1. تجهيز بيانات الطلب للسجل ---
+    const orderData = {
+        date: new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }),
+        items: cart.map(item => `${item.name} (${item.qty})`), // تحويل المنتجات لنصوص
+        total: finalTotal
     };
 
-    allOrders.push(newOrder);
-    localStorage.setItem('all_orders', JSON.stringify(allOrders));
-    // ------------------------------------------
+    // --- 2. حفظ في سجل الطلبات (orderHistory) ---
+    let history = JSON.parse(localStorage.getItem('orderHistory')) || [];
+    history.push(orderData);
+    localStorage.setItem('orderHistory', JSON.stringify(history));
 
-    // إعداد رسالة الواتساب كما كانت
+    // --- 3. إعداد رسالة الواتساب ---
     let msg = `🛍️ *طلب جديد من Urban Gent*%0a`;
-    msg += `👤 *الزبون:* ${userName}%0a`;
+    msg += `👤 *الزبون:* ${user}%0a`;
     msg += `--------------------------%0a`;
-    cart.forEach((item, i) => {
-        msg += `${i+1}. *${item.name}* (قياس: ${item.size} | لون: ${item.color}) عدد: ${item.qty}%0a`;
-    });
-    msg += `%0a💰 *الإجمالي: ${finalTotal} د.ع*`;
 
-    // تفريغ السلة بعد الطلب
+    cart.forEach((item, i) => {
+        msg += `${i+1}. *${item.name}*%0a القياس: ${item.size} | اللون: ${item.color}%0a الكمية: ${item.qty}%0a%0a`;
+    });
+
+    msg += `💰 *الإجمالي النهائي: ${finalTotal} د.ع*`;
+    
+    // --- 4. تفريغ السلة وتوجيه المستخدم ---
     localStorage.removeItem('myCart');
     cart = [];
     updateCartIcon();
 
+    // فتح واتساب
     window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
-    
-    // توجيه الزبون لصفحة طلباته بعد الإرسال
-    window.location.href = 'profile.html'; 
-}
 
+    // توجيه الزبون لصفحة ملفه الشخصي لرؤية الطلب في السجل
+    setTimeout(() => {
+        window.location.href = 'profile.html';
+    }, 1000);
+}
 // --- نظام تسجيل الخروج ---
 function logoutUser() {
     localStorage.removeItem('isLoggedIn');
@@ -422,6 +420,7 @@ function applyCoupon() {
         renderCartPage();
     }
 }
+
 
 
 
