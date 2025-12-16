@@ -286,3 +286,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 function logoutUser() { localStorage.removeItem('isLoggedIn'); window.location.href = 'index.html'; }
+// دالة تطبيق كود الخصم
+function applyCoupon() {
+    const code = document.getElementById('coupon-code').value.trim();
+    const totalEl = document.getElementById('final-total');
+    
+    // حساب الإجمالي الحالي قبل الخصم
+    let currentTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    if (code === "IQ2025") {
+        const discountPercent = 0.10; // خصم 10%
+        const discountAmount = currentTotal * discountPercent;
+        const newTotal = currentTotal - discountAmount;
+        
+        // حفظ الخصم في الـ localStorage لاستخدامه عند الإرسال للواتساب
+        localStorage.setItem('discount', discountPercent);
+        
+        // تحديث الرقم في الصفحة
+        totalEl.textContent = newTotal.toLocaleString();
+        
+        alert("تهانينا! تم تطبيق خصم 10% ✅");
+    } else if (code === "") {
+        alert("يرجى إدخال كود الخصم أولاً");
+    } else {
+        alert("عذراً، هذا الكود غير صالح ❌");
+        localStorage.setItem('discount', 0);
+        renderCartPage(); // إعادة السعر للأصل
+    }
+}
+
