@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        body { background: #f4f7f6; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; }
+        header { background: #2c3e50; padding: 15px; text-align: center; }
+        
         .profile-container {
-            max-width: 500px;
-            margin: 50px auto;
+            max-width: 600px;
+            margin: 30px auto;
             background: white;
             padding: 30px;
             border-radius: 15px;
@@ -26,13 +29,27 @@
             margin: 0 auto 20px;
             color: #2c3e50;
         }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
         .info-card {
             background: #f9f9f9;
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
             border: 1px solid #eee;
         }
+        
+        /* تصميم سجل الطلبات */
+        .orders-section { text-align: right; margin-top: 30px; border-top: 2px solid #eee; pt: 20px; }
+        .order-box {
+            background: #fff;
+            border-right: 5px solid #1abc9c;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .order-date { font-size: 0.85em; color: #888; }
+        .order-items { margin: 5px 0; font-weight: bold; color: #333; }
+        
         .logout-btn {
             background: #e74c3c;
             color: white;
@@ -42,14 +59,16 @@
             cursor: pointer;
             font-weight: bold;
             width: 100%;
+            transition: 0.3s;
         }
+        .logout-btn:hover { background: #c0392b; }
     </style>
 </head>
-<body style="background: #f4f7f6; font-family: 'Tajawal', sans-serif;">
+<body>
 
     <header>
         <nav>
-            <a href="index.html" style="color: white; text-decoration: none;">⬅️ العودة للمتجر</a>
+            <a href="index.html" style="color: white; text-decoration: none; font-weight: bold;">⬅️ العودة للمتجر</a>
         </nav>
     </header>
 
@@ -57,29 +76,55 @@
         <div class="profile-icon">👤</div>
         <h2 id="welcome-msg">أهلاً بك</h2>
         
-        <div class="info-card">
-            <p style="color: #666; margin-bottom: 5px;">رقم الهاتف المسجل:</p>
-            <h3 id="display-phone" style="margin: 0; color: #2c3e50;">-</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <p style="color: #666; margin-bottom: 5px; font-size: 0.9em;">رقم الهاتف:</p>
+                <h3 id="display-phone" style="margin: 0; color: #2c3e50;">-</h3>
+            </div>
+            <div class="info-card">
+                <p style="color: #666; margin-bottom: 5px; font-size: 0.9em;">الحالة:</p>
+                <span style="color: #27ae60; font-weight: bold;">نشط ✅</span>
+            </div>
         </div>
 
-        <div class="info-card">
-            <p style="color: #666; margin-bottom: 5px;">حالة الحساب:</p>
-            <span style="color: #27ae60; font-weight: bold;">نشط ✅</span>
+        <div class="orders-section">
+            <h3>📦 سجل طلباتي</h3>
+            <div id="orders-list">
+                <p style="text-align: center; color: #999;">لا توجد طلبات سابقة.</p>
+            </div>
         </div>
 
+        <br>
         <button onclick="logoutUser()" class="logout-btn">تسجيل الخروج</button>
     </div>
 
     <script src="script.js"></script>
     <script>
-        // عرض بيانات المستخدم عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
             const userPhone = localStorage.getItem('userName');
+            
+            // 1. حماية الصفحة
             if (!userPhone) {
-                window.location.href = 'login.html'; // إذا لم يسجل دخول يرجع للوجن
-            } else {
-                document.getElementById('display-phone').textContent = userPhone;
-                document.getElementById('welcome-msg').textContent = "أهلاً بك يا " + userPhone;
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. عرض البيانات الأساسية
+            document.getElementById('display-phone').textContent = userPhone;
+            document.getElementById('welcome-msg').textContent = "أهلاً بك يا " + userPhone;
+
+            // 3. جلب وعرض سجل الطلبات من الـ LocalStorage
+            const ordersList = document.getElementById('orders-list');
+            const history = JSON.parse(localStorage.getItem('orderHistory')) || [];
+
+            if (history.length > 0) {
+                ordersList.innerHTML = history.reverse().map(order => `
+                    <div class="order-box">
+                        <div class="order-date">${order.date}</div>
+                        <div class="order-items">${order.items.join(' + ')}</div>
+                        <div style="color: #1abc9c; font-weight: bold;">الإجمالي: ${order.total} د.ع</div>
+                    </div>
+                `).join('');
             }
         });
     </script>
