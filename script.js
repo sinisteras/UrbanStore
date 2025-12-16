@@ -330,16 +330,49 @@ function removeItem(index) {
 }
 function checkoutWhatsApp() {
     if (cart.length === 0) return alert('السلة فارغة!');
-    
+
+    // 🆕 الخطوة 1: خصم الكمية من المخزون (محلياً في المتصفح)
+    cart.forEach(item => {
+        // ابحث عن المنتج في قاعدة البيانات الأصلية
+        const productInDb = allProducts.find(p => p.id === item.id);
+        
+        if (productInDb && productInDb.inventory) {
+            // ابحث عن القياس واللون المختار داخل المخزون
+            const variant = productInDb.inventory.find(v => v.size === item.size && v.color === item.color);
+            
+            if (variant) {
+                // نقص الكمية المحجوزة من المخزون المتوفر
+                variant.stock -= item.qty; 
+                if (variant.stock < 0) variant.stock = 0; // حماية حتى لا ينزل تحت الصفر
+            }
+        }
+    });
+
+    // 📝 الخطوة 2: بناء رسالة الواتساب (نفس ترتيبك السابق مع تحسينات)
     let msg = "مرحباً Urban Gent، أريد إتمام الطلب التالي:%0a%0a";
-    
+    let total = 0;
+
     cart.forEach((item, index) => {
         msg += `*${index + 1}. ${item.name}*%0a`;
-        if (item.size) msg += `   - القياس: ${item.size}%0a`;
-        if (item.color) msg += `   - اللون: ${item.color}%0a`;
+        if (item.size && item.size !== "غير محدد") msg += `   - القياس: ${item.size}%0a`;
+        if (item.color && item.color !== "غير محدد") msg += `   - اللون: ${item.color}%0a`;
         msg += `   - الكمية: ${item.qty}%0a`;
         msg += `   - السعر: ${(item.price * item.qty).toLocaleString()} د.ع%0a%0a`;
+        total += item.price * item.qty;
     });
+
+    // إضافة الإجمالي النهائي للرسالة
+    const finalTotal = document.getElementById('final-total')?.textContent || total.toLocaleString();
+    msg += `💰 *الإجمالي النهائي: ${finalTotal} د.ع*`;
+
+    // فتح واتساب
+    window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
+    
+    // اختياري: تفريغ السلة بعد الطلب
+    // cart = [];
+    // localStorage.setItem('myCart', JSON.stringify(cart));
+    // updateCartIcon();
+}
 
     const finalPrice = document.getElementById('final-total').textContent;
     msg += `--------------------------%0a`;
@@ -395,6 +428,7 @@ function applyCoupon() {
         renderCartPage(); // إعادة السعر للأصل
     }
 }
+
 
 
 
