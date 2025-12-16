@@ -310,6 +310,7 @@ function applyCoupon() {
         localStorage.setItem('discount', 0);
         renderCartPage();
     }
+}
 
 // تسجيل الدخول والحسابات
 document.addEventListener('DOMContentLoaded', () => {
@@ -360,4 +361,5 @@ function logoutUser() {
     localStorage.removeItem('userName');
     window.location.href = 'index.html'; 
 }
+
 
