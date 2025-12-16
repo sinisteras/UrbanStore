@@ -1,9 +1,9 @@
-// استيراد Firebase
+// استيراد Firebase - تأكد أن الربط في HTML هو type="module"
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSy...", 
+  apiKey: "AIzaSy...", // ضع مفتاحك هنا
   authDomain: "urban-gent.firebaseapp.com",
   projectId: "urban-gent",
   storageBucket: "urban-gent.appspot.com",
@@ -13,85 +13,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const MY_PHONE_NUMBER = "9647724329890"; 
 
 // 📦 1. قاعدة البيانات
 const allProducts = [
-    {
-        id: 1,
-        name: "بدلة رسمية سوداء",
-        price: 150000,
-        image: "images/suit.jpg",
-        description: "بدلة رسمية فاخرة.",
-        sizes: ["48", "50", "52"], 
-        colors: ["أسود"],
-        inventory: [
-            { size: "48", color: "أسود", stock: 5 },
-            { size: "50", color: "أسود", stock: 3 },
-            { size: "52", color: "أسود", stock: 1 }
-        ],
-        gallery: ["images/suit.jpg", "images/suit_back.jpg", "images/suit_fabric.jpg"]
-    },
-    {
-        id: 2,
-        name: "قميص أبيض كلاسيك",
-        price: 35000,
-        image: "images/shirt.jpg",
-        description: "قميص قطني 100%.",
-        sizes: ["M", "L", "XL"],
-        colors: ["أبيض"],
-        inventory: [
-            { size: "M", color: "أبيض", stock: 10 },
-            { size: "L", color: "أبيض", stock: 4 },
-            { size: "XL", color: "أبيض", stock: 2 }
-        ],
-        gallery: ["images/shirt.jpg","images/shirt2.jpg"]
-    },
-    {
-        id: 3,
-        name: "حذاء جلد طبيعي",
-        price: 25000,
-        image: "images/shoes.jpg",
-        description: "حذاء جلد طبيعي.",
-        sizes: ["40", "41", "42"],
-        colors: ["أسود", "بني"],
-        inventory: [
-            { size: "40", color: "أسود", stock: 5 },
-            { size: "41", color: "أسود", stock: 2 },
-            { size: "40", color: "بني", stock: 3 }
-        ],
-        gallery: ["images/shoes.jpg", "images/shoes2.jpg"]
-    },
-    {
-        id: 4,
-        name: "سويتر شتوي",
-        price: 25000,
-        image: "images/sweater.jpg",
-        description: "سويتر صوف دافئ.",
-        sizes: ["M", "L", "XL"],
-        colors: ["رمادي", "أحمر", "أصفر"],
-        inventory: [
-            { size: "M", color: "رمادي", stock: 6 },
-            { size: "L", color: "أحمر", stock: 0 }
-        ],
-        gallery: ["images/sweater.jpg", "images/sweater_red.jpg", "images/sweater_yellow.jpg"]
-    },
-    {
-        id: 5,
-        name: "بنطلون رسمي",
-        price: 20000,
-        image: "images/pant.jpg",
-        description: "بنطلون قماش رسمي فاخر.",
-        sizes: ["30", "32", "34"],
-        colors: ["اسود"],
-        inventory: [
-            { size: "30", color: "اسود", stock: 4 },
-            { size: "32", color: "اسود", stock: 2 },
-            { size: "34", color: "اسود", stock: 0 }
-        ],
-        gallery: ["images/pant.jpg"]
-    }
+    { id: 1, name: "بدلة رسمية سوداء", price: 150000, image: "images/suit.jpg", description: "بدلة رسمية فاخرة.", sizes: ["48", "50", "52"], colors: ["أسود"], inventory: [{ size: "48", color: "أسود", stock: 5 }, { size: "50", color: "أسود", stock: 3 }, { size: "52", color: "أسود", stock: 1 }], gallery: ["images/suit.jpg", "images/suit_back.jpg", "images/suit_fabric.jpg"] },
+    { id: 2, name: "قميص أبيض كلاسيك", price: 35000, image: "images/shirt.jpg", description: "قميص قطني 100%.", sizes: ["M", "L", "XL"], colors: ["أبيض"], inventory: [{ size: "M", color: "أبيض", stock: 10 }, { size: "L", color: "أبيض", stock: 4 }, { size: "XL", color: "أبيض", stock: 2 }], gallery: ["images/shirt.jpg","images/shirt2.jpg"] },
+    { id: 3, name: "حذاء جلد طبيعي", price: 25000, image: "images/shoes.jpg", description: "حذاء جلد طبيعي.", sizes: ["40", "41", "42"], colors: ["أسود", "بني"], inventory: [{ size: "40", color: "أسود", stock: 5 }, { size: "41", color: "أسود", stock: 2 }, { size: "40", color: "بني", stock: 3 }], gallery: ["images/shoes.jpg", "images/shoes2.jpg"] },
+    { id: 4, name: "سويتر شتوي", price: 25000, image: "images/sweater.jpg", description: "سويتر صوف دافئ.", sizes: ["M", "L", "XL"], colors: ["رمادي", "أحمر", "أصفر"], inventory: [{ size: "M", color: "رمادي", stock: 6 }, { size: "L", color: "أحمر", stock: 0 }], gallery: ["images/sweater.jpg", "images/sweater_red.jpg", "images/sweater_yellow.jpg"] },
+    { id: 5, name: "بنطلون رسمي", price: 20000, image: "images/pant.jpg", description: "بنطلون قماش رسمي فاخر.", sizes: ["30", "32", "34"], colors: ["اسود"], inventory: [{ size: "30", color: "اسود", stock: 4 }, { size: "32", color: "اسود", stock: 2 }, { size: "34", color: "اسود", stock: 0 }], gallery: ["images/pant.jpg"] }
 ];
 
 // --- 🛒 نظام السلة ---
@@ -101,20 +31,27 @@ function updateCartIcon() {
     const countEl = document.getElementById('cart-count');
     if (countEl) countEl.textContent = cart.reduce((total, item) => total + item.qty, 0);
 }
-updateCartIcon();
 
-// --- 📄 منطق العرض ---
-document.addEventListener('DOMContentLoaded', () => {
+// --- 📄 منطق العرض الرئيسي ---
+function initApp() {
     const user = localStorage.getItem('userName');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
+    // تحديث الهيدر والحساب
+    const guestLinks = document.getElementById('guest-links');
+    const userLinks = document.getElementById('user-links');
+    const nameDisplay = document.getElementById('user-name-display');
+
     if (isLoggedIn && user) {
-        if(document.getElementById('guest-links')) document.getElementById('guest-links').style.display = 'none';
-        if(document.getElementById('user-links')) document.getElementById('user-links').style.display = 'flex';
-        const nameDisplay = document.getElementById('user-name-display');
-        if (nameDisplay) nameDisplay.textContent = user;
+        if(guestLinks) guestLinks.style.display = 'none';
+        if(userLinks) userLinks.style.display = 'flex';
+        if(nameDisplay) nameDisplay.textContent = user;
+    } else {
+        if(guestLinks) guestLinks.style.display = 'flex';
+        if(userLinks) userLinks.style.display = 'none';
     }
 
+    // عرض المنتجات
     const grid = document.querySelector('.products-grid');
     if (grid) {
         grid.innerHTML = allProducts.map(p => `
@@ -127,28 +64,35 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
+    // عرض تفاصيل المنتج (إذا كنا في صفحة المنتج)
+    if (window.location.pathname.includes('product.html')) {
+        renderProductDetails();
+    }
+
+    // عرض السلة (إذا كنا في صفحة السلة)
     if (document.getElementById('cart-items-container')) {
         renderCartPage();
     }
-});
 
-// --- صفحة تفاصيل المنتج ---
-if (window.location.pathname.includes('product.html')) {
+    updateCartIcon();
+}
+
+// دالة تفاصيل المنتج
+function renderProductDetails() {
     const params = new URLSearchParams(window.location.search);
     const id = parseInt(params.get('id'));
     const product = allProducts.find(p => p.id === id);
 
     if (product) {
-        const mainImg = document.getElementById('p-img');
-        if (mainImg) mainImg.src = product.image;
-        document.getElementById('p-name').textContent = product.name;
-        document.getElementById('p-price').textContent = product.price.toLocaleString() + ' د.ع';
-        document.getElementById('p-desc').textContent = product.description;
+        if (document.getElementById('p-img')) document.getElementById('p-img').src = product.image;
+        if (document.getElementById('p-name')) document.getElementById('p-name').textContent = product.name;
+        if (document.getElementById('p-price')) document.getElementById('p-price').textContent = product.price.toLocaleString() + ' د.ع';
+        if (document.getElementById('p-desc')) document.getElementById('p-desc').textContent = product.description;
 
         const optionsContainer = document.getElementById('options-container');
         if (optionsContainer) {
-            let html = `<label>القياس:</label> <select id="size-select" onchange="updateStockStatus(${product.id})"><option value="">اختر..</option>${product.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select><br><br>`;
-            html += `<label>اللون:</label> <select id="color-select" onchange="updateStockStatus(${product.id})"><option value="">اختر..</option>${product.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>`;
+            let html = `<label>القياس:</label> <select id="size-select" onchange="window.updateStockStatus(${product.id})"><option value="">اختر..</option>${product.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select><br><br>`;
+            html += `<label>اللون:</label> <select id="color-select" onchange="window.updateStockStatus(${product.id})"><option value="">اختر..</option>${product.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select>`;
             html += `<div id="stock-display" style="margin-top:15px; font-weight:bold; color:#e67e22;">يرجى اختيار القياس واللون</div>`;
             optionsContainer.innerHTML = html;
         }
@@ -165,21 +109,8 @@ if (window.location.pathname.includes('product.html')) {
     }
 }
 
-// --- الدوال المساعدة ---
-function addToCart(productId, s, c) {
-    const product = allProducts.find(p => p.id === productId);
-    const existing = cart.find(i => i.id === productId && i.size === s && i.color === c);
-    if (existing) {
-        existing.qty++;
-    } else {
-        cart.push({ ...product, qty: 1, size: s, color: c });
-    }
-    localStorage.setItem('myCart', JSON.stringify(cart));
-    updateCartIcon();
-    alert('تمت الإضافة للسلة! ✅');
-}
-
-function updateStockStatus(productId) {
+// --- الدوال المساعدة المربوطة بالنافذة ---
+window.updateStockStatus = (productId) => {
     const product = allProducts.find(p => p.id === productId);
     const s = document.getElementById('size-select')?.value;
     const c = document.getElementById('color-select')?.value;
@@ -198,41 +129,22 @@ function updateStockStatus(productId) {
             if(btn) { btn.disabled = true; btn.style.opacity = "0.5"; }
         }
     }
-}
+};
 
-async function checkoutWhatsApp() {
-    const user = localStorage.getItem('userName');
-    if (!user) return alert("يرجى تسجيل الدخول أولاً 🔐");
-    if (cart.length === 0) return alert('السلة فارغة!');
-    const finalTotal = document.getElementById('final-total').textContent;
-
-    const orderData = {
-        customerName: user,
-        date: new Date().toLocaleString('ar-EG'),
-        items: cart.map(item => `${item.name} (${item.size}/${item.color}) عدد: ${item.qty}`),
-        total: finalTotal,
-        status: "قيد المراجعة"
-    };
-
-    try {
-        await addDoc(collection(db, "orders"), orderData);
-        let history = JSON.parse(localStorage.getItem('orderHistory')) || [];
-        history.push(orderData);
-        localStorage.setItem('orderHistory', JSON.stringify(history));
-    } catch (e) { console.error(e); }
-
-    let msg = `🛍️ *طلب جديد من Urban Gent*%0a👤 *الزبون:* ${user}%0a💰 *الإجمالي: ${finalTotal} د.ع*`;
-    localStorage.removeItem('myCart');
-    cart = [];
+function addToCart(productId, s, c) {
+    const product = allProducts.find(p => p.id === productId);
+    const existing = cart.find(i => i.id === productId && i.size === s && i.color === c);
+    if (existing) existing.qty++;
+    else cart.push({ ...product, qty: 1, size: s, color: c });
+    localStorage.setItem('myCart', JSON.stringify(cart));
     updateCartIcon();
-    window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
-    setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
+    alert('تمت الإضافة للسلة! ✅');
 }
 
-function renderCartPage() {
+window.renderCartPage = function() {
     const container = document.getElementById('cart-items-container');
     const totalEl = document.getElementById('final-total');
-    if (!container) return;
+    if (!container || !totalEl) return;
 
     if (cart.length === 0) {
         container.innerHTML = '<tr><td colspan="5">السلة فارغة 🛒</td></tr>';
@@ -249,68 +161,61 @@ function renderCartPage() {
                 <td>${item.name}<br><small>${item.size} | ${item.color}</small></td>
                 <td>${item.price.toLocaleString()}</td>
                 <td>
-                    <button onclick="changeQty(${index}, -1)">-</button>
+                    <button onclick="window.changeQty(${index}, -1)">-</button>
                     ${item.qty}
-                    <button onclick="changeQty(${index}, 1)">+</button>
+                    <button onclick="window.changeQty(${index}, 1)">+</button>
                 </td>
-                <td><button onclick="removeItem(${index})">❌</button></td>
+                <td><button onclick="window.removeItem(${index})">❌</button></td>
             </tr>`;
     }).join('');
 
     const discountPercent = parseFloat(localStorage.getItem('discount')) || 0;
     const finalTotal = subtotal - (subtotal * discountPercent);
     totalEl.textContent = finalTotal.toLocaleString();
-}
+};
 
-function changeQty(index, delta) {
+window.changeQty = (index, delta) => {
     if (cart[index].qty + delta > 0) {
         cart[index].qty += delta;
         localStorage.setItem('myCart', JSON.stringify(cart));
-        renderCartPage();
+        window.renderCartPage();
         updateCartIcon();
     }
-}
+};
 
-function removeItem(index) {
+window.removeItem = (index) => {
     cart.splice(index, 1);
     localStorage.setItem('myCart', JSON.stringify(cart));
-    renderCartPage();
+    window.renderCartPage();
     updateCartIcon();
-}
+};
 
-function applyCoupon() {
+window.applyCoupon = () => {
     const codeInput = document.getElementById('coupon-code');
-    if (!codeInput) return;
-    const code = codeInput.value.trim().toUpperCase();
-    const isUsed = localStorage.getItem('coupon_IQ2025_used');
-
-    if (isUsed === 'true') {
-        alert("عذراً، لقد استخدمت هذا الكود مسبقاً! ❌");
-        return;
-    }
-
+    const code = codeInput?.value.trim().toUpperCase();
     if (code === "IQ2025") {
         localStorage.setItem('discount', 0.10);
         localStorage.setItem('coupon_IQ2025_used', 'true');
-        alert("تهانينا! تم تطبيق خصم 10% بنجاح ✅");
-        renderCartPage();
+        alert("تم الخصم! ✅");
+        window.renderCartPage();
     } else {
-        alert("كود الخصم غير صحيح ❌");
-        localStorage.setItem('discount', 0);
-        renderCartPage();
+        alert("كود خاطئ ❌");
     }
-}
+};
 
-function logoutUser() {
+window.logoutUser = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userName');
     window.location.href = 'index.html';
-}
+};
 
-// ربط الدوال بالـ window لضمان عملها مع HTML
-window.removeItem = removeItem;
-window.changeQty = changeQty;
-window.applyCoupon = applyCoupon;
-window.checkoutWhatsApp = checkoutWhatsApp;
-window.logoutUser = logoutUser;
-window.updateStockStatus = updateStockStatus;
+window.checkoutWhatsApp = async () => {
+    const user = localStorage.getItem('userName');
+    const finalTotal = document.getElementById('final-total')?.textContent;
+    const msg = `🛍️ طلب جديد من: ${user}%0a💰 الإجمالي: ${finalTotal}`;
+    localStorage.removeItem('myCart');
+    window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
+};
+
+// تشغيل التطبيق عند التحميل
+document.addEventListener('DOMContentLoaded', initApp);
