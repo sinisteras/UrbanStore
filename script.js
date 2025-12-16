@@ -213,9 +213,21 @@ window.checkoutWhatsApp = async () => {
     const user = localStorage.getItem('userName');
     const finalTotal = document.getElementById('final-total')?.textContent;
     const msg = `🛍️ طلب جديد من: ${user}%0a💰 الإجمالي: ${finalTotal}`;
+    
+    // 1. تنظيف التخزين
     localStorage.removeItem('myCart');
+    localStorage.removeItem('discount');
+    
+    // 2. تصفير السلة في الكود الحالي وتحديث الواجهة
+    if (typeof cart !== 'undefined') {
+        cart = []; // تصفير مصفوفة السلة
+        if (typeof updateCartIcon === 'function') updateCartIcon();
+    }
+
+    // 3. فتح الواتساب
     window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
 };
 
 // تشغيل التطبيق عند التحميل
 document.addEventListener('DOMContentLoaded', initApp);
+
