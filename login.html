@@ -6,10 +6,9 @@
     <title>تسجيل الدخول - Urban Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* نفس التصميم لضمان التناسق */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Tajawal', sans-serif; /* تم تحديث الخط للاتساق */
+            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -35,13 +34,14 @@
             border-radius: 8px;
             box-sizing: border-box;
             transition: border 0.3s;
+            text-align: left; /* للأرقام */
         }
-        .input-group input:focus { border-color: #764ba2; outline: none; }
+        .input-group input:focus { border-color: #1abc9c; outline: none; }
         
         .btn-primary {
             width: 100%;
             padding: 12px;
-            background: #333; /* لون مختلف قليلاً للتمييز */
+            background: #2c3e50;
             color: white;
             border: none;
             border-radius: 8px;
@@ -50,57 +50,58 @@
             font-weight: bold;
             transition: background 0.3s;
         }
-        .btn-primary:hover { background: #555; }
+        .btn-primary:hover { background: #1abc9c; }
         
         .link-text { margin-top: 15px; font-size: 0.9em; }
-        .link-text a { color: #764ba2; text-decoration: none; font-weight: bold; }
+        .link-text a { color: #1abc9c; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="auth-card">
         <h2>تسجيل الدخول</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="loginEmail" required>
-            </div>
-            <div class="input-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="loginPass" required>
-            </div>
-            <button type="submit" class="btn-primary">دخول</button>
-        </form>
+        <div class="input-group">
+            <label>رقم الهاتف</label>
+            <input type="tel" id="loginPhone" placeholder="077XXXXXXXX" required>
+        </div>
+        <div class="input-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="loginPass" placeholder="******" required>
+        </div>
+        <button onclick="handleLogin()" class="btn-primary">دخول</button>
+        
         <p class="link-text">ليس لديك حساب؟ <a href="signup.html">أنشئ حساباً جديداً</a></p>
         <p class="link-text"><a href="index.html">العودة للمتجر</a></p>
     </div>
 
+    <script src="script.js"></script>
+    
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // 1. البيانات المدخلة
-            const enteredEmail = document.getElementById('loginEmail').value;
-            const enteredPass = document.getElementById('loginPass').value;
+        // دالة التعامل مع الدخول داخل الصفحة لتربطها بـ script.js
+        function handleLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
 
-            // 2. البيانات المحفوظة في الذاكرة (من صفحة الإنشاء)
-            const storedEmail = localStorage.getItem('userEmail');
-            const storedPass = localStorage.getItem('userPassword');
-            const storedName = localStorage.getItem('userName');
+            if(!phone || !pass) {
+                alert("يرجى ملء كافة الحقول");
+                return;
+            }
 
-            // 3. التحقق
-            if(enteredEmail === storedEmail && enteredPass === storedPass) {
-                alert('أهلاً بك يا ' + storedName + '! تم تسجيل الدخول بنجاح.');
-                // هنا يمكن حفظ حالة أن المستخدم "مسجل دخوله"
+            // استدعاء الدالة من ملف script.js (تأكد أنها موجودة هناك)
+            // سأكتب لك المنطق هنا أيضاً لضمان العمل الفوري:
+            let users = JSON.parse(localStorage.getItem('registered_users')) || [];
+            const user = users.find(u => u.phone === phone && u.password === pass);
+
+            if (user) {
+                alert('تم تسجيل الدخول بنجاح! أهلاً بك.');
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userName', phone);
                 window.location.href = 'index.html';
             } else {
-                alert('خطأ: البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+                alert('خطأ: رقم الهاتف أو كلمة المرور غير صحيحة!');
             }
-        });
+        }
     </script>
 
 </body>
-
 </html>
-
