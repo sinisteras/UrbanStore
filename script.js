@@ -51,7 +51,7 @@ const allProducts = [
             { size: "40", color: "بني", stock: 3 }
         ],
         gallery: ["images/shoes.jpg", "images/shoes2.jpg"]
-    }
+    },
     {
         id: 4,
         name: "سويتر شتوي",
@@ -256,4 +256,5 @@ function logoutUser() {
     alert("تم تسجيل الخروج");
     window.location.href = 'index.html';
 }
+
 
