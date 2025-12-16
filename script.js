@@ -83,7 +83,84 @@ const allProducts = [
         gallery: ["images/pant.jpg"]
     }
 ];
+// --- صفحة تفاصيل المنتج ---
+if (window.location.pathname.includes('product.html')) {
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+    const product = allProducts.find(p => p.id === id);
 
+    if (product) {
+        // تحديث النصوص والصور
+        const mainImg = document.getElementById('p-img');
+        if (mainImg) mainImg.src = product.image;
+        
+        document.getElementById('p-name').textContent = product.name;
+        document.getElementById('p-price').textContent = product.price.toLocaleString() + ' د.ع';
+        document.getElementById('p-desc').textContent = product.description;
+
+        // توليد الصور المصغرة
+        const thumbsContainer = document.getElementById('thumbnails-container');
+        if (thumbsContainer && product.gallery) {
+            thumbsContainer.innerHTML = product.gallery.map(imgSrc => `
+                <img src="${imgSrc}" onclick="document.getElementById('p-img').src='${imgSrc}'" 
+                     style="width:60px; height:60px; object-fit:cover; border:2px solid #ddd; border-radius:5px; cursor:pointer;">
+            `).join('');
+        }
+
+        // توليد خيارات القياس واللون
+        const optionsContainer = document.getElementById('options-container');
+        if (optionsContainer) {
+            let html = '';
+            if (product.sizes) {
+                html += `<label>القياس:</label> <select id="size-select" onchange="updateStockStatus(${product.id})">
+                            <option value="">اختر..</option>
+                            ${product.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}
+                         </select><br><br>`;
+            }
+            if (product.colors) {
+                html += `<label>اللون:</label> <select id="color-select" onchange="updateStockStatus(${product.id})">
+                            <option value="">اختر..</option>
+                            ${product.colors.map(c => `<option value="${c}">${c}</option>`).join('')}
+                         </select>`;
+            }
+            html += `<div id="stock-display" style="margin-top:15px; font-weight:bold; color:#e67e22;">يرجى اختيار القياس واللون</div>`;
+            optionsContainer.innerHTML = html;
+        }
+
+        // تفعيل زر الإضافة
+        const addBtn = document.getElementById('add-btn');
+        if (addBtn) {
+            addBtn.onclick = () => {
+                const s = document.getElementById('size-select')?.value;
+                const c = document.getElementById('color-select')?.value;
+                if (!s || !c) return alert('يرجى اختيار القياس واللون! ⚠️');
+                addToCart(product.id, s, c);
+            };
+        }
+    }
+}
+
+// دالة تحديث حالة المخزون (تظهر للزبون إذا كانت القطعة متوفرة أم لا)
+function updateStockStatus(productId) {
+    const product = allProducts.find(p => p.id === productId);
+    const s = document.getElementById('size-select')?.value;
+    const c = document.getElementById('color-select')?.value;
+    const display = document.getElementById('stock-display');
+    const btn = document.getElementById('add-btn');
+
+    if (s && c && product.inventory) {
+        const variant = product.inventory.find(v => v.size === s && v.color === c);
+        if (variant && variant.stock > 0) {
+            display.textContent = `متوفر: ${variant.stock} قطعة ✅`;
+            display.style.color = "#27ae60";
+            btn.disabled = false; btn.style.opacity = "1";
+        } else {
+            display.textContent = "للأسف، نفدت هذه التشكيلة ❌";
+            display.style.color = "#c0392b";
+            btn.disabled = true; btn.style.opacity = "0.5";
+        }
+    }
+}
 // ==========================================
 // 🛒 2. نظام السلة الأساسي
 // ==========================================
@@ -275,4 +352,5 @@ function recoverPassword() {
         alert("عذراً، هذا الرقم غير مسجل على هذا الجهاز ❌");
     }
 }
+
 
