@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
+  apiKey: "AIzaSy...", 
   authDomain: "urban-gent.firebaseapp.com",
   projectId: "urban-gent",
   storageBucket: "urban-gent.appspot.com",
@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = localStorage.getItem('userName');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-    // تحديث الهيدر
     if (isLoggedIn && user) {
         if(document.getElementById('guest-links')) document.getElementById('guest-links').style.display = 'none';
         if(document.getElementById('user-links')) document.getElementById('user-links').style.display = 'flex';
@@ -116,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nameDisplay) nameDisplay.textContent = user;
     }
 
-    // عرض المنتجات في الرئيسية (تم إصلاحها هنا)
     const grid = document.querySelector('.products-grid');
     if (grid) {
         grid.innerHTML = allProducts.map(p => `
@@ -133,14 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCartPage();
     }
 });
-
-// إتاحة الدوال للنافذة العالمية (Global Scope)
-window.goToProduct = (id) => window.location.href = `product.html?id=${id}`;
-window.checkoutWhatsApp = checkoutWhatsApp;
-window.logoutUser = logoutUser;
-window.applyCoupon = applyCoupon;
-window.changeQty = changeQty;
-window.removeItem = removeItem;
 
 // --- صفحة تفاصيل المنتج ---
 if (window.location.pathname.includes('product.html')) {
@@ -175,15 +165,39 @@ if (window.location.pathname.includes('product.html')) {
     }
 }
 
-// الدوال المساعدة (Add to Cart, Update Status, الخ...)
+// --- الدوال المساعدة ---
 function addToCart(productId, s, c) {
     const product = allProducts.find(p => p.id === productId);
     const existing = cart.find(i => i.id === productId && i.size === s && i.color === c);
-    if (existing) existing.qty++;
-    else cart.push({ ...product, qty: 1, size: s, color: c });
+    if (existing) {
+        existing.qty++;
+    } else {
+        cart.push({ ...product, qty: 1, size: s, color: c });
+    }
     localStorage.setItem('myCart', JSON.stringify(cart));
     updateCartIcon();
     alert('تمت الإضافة للسلة! ✅');
+}
+
+function updateStockStatus(productId) {
+    const product = allProducts.find(p => p.id === productId);
+    const s = document.getElementById('size-select')?.value;
+    const c = document.getElementById('color-select')?.value;
+    const display = document.getElementById('stock-display');
+    const btn = document.getElementById('add-btn');
+
+    if (s && c && product.inventory) {
+        const variant = product.inventory.find(v => v.size === s && v.color === c);
+        if (variant && variant.stock > 0) {
+            display.textContent = `متوفر: ${variant.stock} قطعة ✅`;
+            display.style.color = "#27ae60";
+            if(btn) { btn.disabled = false; btn.style.opacity = "1"; }
+        } else {
+            display.textContent = "للأسف، نفدت هذه التشكيلة ❌";
+            display.style.color = "#c0392b";
+            if(btn) { btn.disabled = true; btn.style.opacity = "0.5"; }
+        }
+    }
 }
 
 async function checkoutWhatsApp() {
@@ -215,12 +229,6 @@ async function checkoutWhatsApp() {
     setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
 }
 
-function logoutUser() {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userName');
-    window.location.href = 'index.html';
-}
-
 function renderCartPage() {
     const container = document.getElementById('cart-items-container');
     const totalEl = document.getElementById('final-total');
@@ -249,13 +257,20 @@ function renderCartPage() {
             </tr>`;
     }).join('');
 
-    // --- الجزء المضاف لحساب الخصم ---
     const discountPercent = parseFloat(localStorage.getItem('discount')) || 0;
     const finalTotal = subtotal - (subtotal * discountPercent);
-    
-    // عرض السعر النهائي بعد الخصم
     totalEl.textContent = finalTotal.toLocaleString();
 }
+
+function changeQty(index, delta) {
+    if (cart[index].qty + delta > 0) {
+        cart[index].qty += delta;
+        localStorage.setItem('myCart', JSON.stringify(cart));
+        renderCartPage();
+        updateCartIcon();
+    }
+}
+
 function removeItem(index) {
     cart.splice(index, 1);
     localStorage.setItem('myCart', JSON.stringify(cart));
@@ -266,22 +281,19 @@ function removeItem(index) {
 function applyCoupon() {
     const codeInput = document.getElementById('coupon-code');
     if (!codeInput) return;
-
     const code = codeInput.value.trim().toUpperCase();
     const isUsed = localStorage.getItem('coupon_IQ2025_used');
 
-    // 1. التحقق إذا كان الكود مستخدم سابقاً
     if (isUsed === 'true') {
         alert("عذراً، لقد استخدمت هذا الكود مسبقاً! ❌");
         return;
     }
 
-    // 2. التحقق من صحة الكود (مثلاً الكود هو IQ2025)
     if (code === "IQ2025") {
-        localStorage.setItem('discount', 0.10); // خصم 10%
-        localStorage.setItem('coupon_IQ2025_used', 'true'); // تعليم الكود كمستخدم
+        localStorage.setItem('discount', 0.10);
+        localStorage.setItem('coupon_IQ2025_used', 'true');
         alert("تهانينا! تم تطبيق خصم 10% بنجاح ✅");
-        renderCartPage(); // تحديث السعر في الصفحة فوراً
+        renderCartPage();
     } else {
         alert("كود الخصم غير صحيح ❌");
         localStorage.setItem('discount', 0);
@@ -289,6 +301,16 @@ function applyCoupon() {
     }
 }
 
+function logoutUser() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userName');
+    window.location.href = 'index.html';
+}
+
+// ربط الدوال بالـ window لضمان عملها مع HTML
 window.removeItem = removeItem;
 window.changeQty = changeQty;
 window.applyCoupon = applyCoupon;
+window.checkoutWhatsApp = checkoutWhatsApp;
+window.logoutUser = logoutUser;
+window.updateStockStatus = updateStockStatus;
