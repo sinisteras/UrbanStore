@@ -32,7 +32,7 @@ const allProducts = [
         colors: ["أبيض"],
         inventory: [
             { size: "M", color: "أبيض", stock: 10 },
-            { size: "L", color: "أبيض", stock: 4 }, // كما طلبت
+            { size: "L", color: "أبيض", stock: 4 },
             { size: "XL", color: "أبيض", stock: 2 }
         ],
         gallery: ["images/shirt.jpg","images/shirt2.jpg"]
@@ -96,7 +96,6 @@ function updateCartIcon() {
 
 function addToCart(productId, selectedSize = null, selectedColor = null) {
     const product = allProducts.find(p => p.id === productId);
-    
     const finalSize = selectedSize || "";
     const finalColor = selectedColor || "";
 
@@ -149,7 +148,6 @@ if (window.location.pathname.includes('product.html')) {
         document.getElementById('p-price').textContent = product.price.toLocaleString() + ' د.ع';
         document.getElementById('p-desc').textContent = product.description;
 
-        // المعرض
         const thumbsContainer = document.getElementById('thumbnails-container');
         thumbsContainer.innerHTML = ''; 
         if (product.gallery) {
@@ -166,10 +164,8 @@ if (window.location.pathname.includes('product.html')) {
             });
         }
 
-        // الخيارات
         const optionsContainer = document.getElementById('options-container');
         optionsContainer.innerHTML = '';
-
         if (product.sizes?.length) {
             optionsContainer.innerHTML += `<label>القياس:</label> <select id="size-select" onchange="updateStockStatus(${product.id})"><option value="">اختر..</option>${product.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select><br><br>`;
         }
@@ -275,11 +271,14 @@ function checkoutWhatsApp() {
         if (pDb?.inventory) {
             const variant = pDb.inventory.find(v => v.size === item.size && v.color === item.color);
             if (variant) variant.stock = Math.max(0, variant.stock - item.qty);
-            if (localStorage.getItem('discount') > 0) {
-        localStorage.setItem('coupon_IQ2025_used', 'true');
-        localStorage.setItem('discount', 0);
         }
     });
+
+    // حرق كود الخصم بعد الطلب
+    if (localStorage.getItem('discount') > 0) {
+        localStorage.setItem('coupon_IQ2025_used', 'true');
+        localStorage.setItem('discount', 0);
+    }
 
     let msg = "مرحباً Urban Gent، طلب جديد:%0a%0a";
     cart.forEach((item, i) => {
@@ -294,8 +293,6 @@ function checkoutWhatsApp() {
 function applyCoupon() {
     const codeInput = document.getElementById('coupon-code');
     const code = codeInput.value.trim();
-    
-    // فحص هل تم استخدام الكود من قبل في هذا المتصفح
     const isUsed = localStorage.getItem('coupon_IQ2025_used');
 
     if (isUsed === 'true') {
@@ -305,13 +302,9 @@ function applyCoupon() {
     }
 
     if (code === "IQ2025") {
-        // حفظ في الذاكرة أنه استخدم الكود
         localStorage.setItem('discount', 0.10);
-        
-        alert("تهانينا! تم تطبيق خصم 10% ✅ (صالح لمرة واحدة فقط)");
-        renderCartPage(); // لتحديث السعر فوراً
-    } else if (code === "") {
-        alert("يرجى إدخال كود الخصم");
+        alert("تهانينا! تم تطبيق خصم 10% ✅");
+        renderCartPage();
     } else {
         alert("كود الخصم غير صحيح ❌");
         localStorage.setItem('discount', 0);
@@ -319,7 +312,7 @@ function applyCoupon() {
     }
 }
 
-// تسجيل الدخول
+// تسجيل الدخول والحسابات
 document.addEventListener('DOMContentLoaded', () => {
     const user = localStorage.getItem('userName');
     if (user && document.getElementById('user-name-display')) {
@@ -328,57 +321,39 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('user-name-display').textContent = user;
     }
 });
-function logoutUser() { localStorage.clear(); window.location.href = 'index.html'; }
-// ==========================================
-// 🔐 نظام الحسابات (بالهاتف)
-// ==========================================
 
-// --- دالة تسجيل الدخول ---
 function loginUser() {
     const phone = document.getElementById('login-phone').value.trim();
     const pass = document.getElementById('login-pass').value.trim();
-
-    // جلب قائمة المستخدمين من الذاكرة
     let users = JSON.parse(localStorage.getItem('registered_users')) || [];
-
-    // البحث عن مستخدم يطابق الهاتف وكلمة المرور
     const user = users.find(u => u.phone === phone && u.password === pass);
 
     if (user) {
-        // حفظ حالة الجلسة
         localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userName', phone); // سيظهر الرقم في الهيدر
-        
-        alert("أهلاً بك مجدداً! تم تسجيل الدخول ✅");
-        window.location.href = 'index.html'; // التوجه للرئيسية
+        localStorage.setItem('userName', phone);
+        alert("أهلاً بك مجدداً! ✅");
+        window.location.href = 'index.html';
     } else {
-        alert("خطأ: رقم الهاتف أو كلمة المرور غير صحيحة ❌");
+        alert("خطأ في البيانات ❌");
     }
 }
 
-// --- دالة إنشاء حساب جديد (توضع في صفحة signup.html) ---
 function registerUser() {
     const phone = document.getElementById('phone').value.trim();
     const pass = document.getElementById('password').value.trim();
-
-    if (phone.length < 10 || pass.length < 4) {
-        alert("يرجى إدخال رقم هاتف صحيح وكلمة مرور قوية");
-        return;
-    }
-
+    if (phone.length < 10) return alert("رقم الهاتف غير صحيح");
+    
     let users = JSON.parse(localStorage.getItem('registered_users')) || [];
+    if (users.find(u => u.phone === phone)) return alert("الرقم مسجل مسبقاً ❌");
 
-    // فحص هل الرقم مستخدم سابقاً
-    const isExist = users.find(u => u.phone === phone);
+    users.push({ phone, password: pass });
+    localStorage.setItem('registered_users', JSON.stringify(users));
+    alert("تم التسجيل! يمكنك الدخول الآن ✅");
+    window.location.href = 'login.html';
+}
 
-    if (isExist) {
-        alert("هذا الرقم مسجل بالفعل! حاول تسجيل الدخول ❌");
-    } else {
-        // إضافة المستخدم للقائمة
-        users.push({ phone: phone, password: pass });
-        localStorage.setItem('registered_users', JSON.stringify(users));
-        
-        alert("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول ✅");
-        window.location.href = 'login.html';
-    }
+function logoutUser() { 
+    localStorage.removeItem('isLoggedIn'); 
+    localStorage.removeItem('userName');
+    window.location.href = 'index.html'; 
 }
