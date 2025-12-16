@@ -229,17 +229,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- الصفحة الرئيسية ---
 if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/')) {
-    const grid = document.querySelector('.products-grid');
-    if (grid) {
-        grid.innerHTML = allProducts.map(p => `
-            <div class="product-card">
-                <img src="${p.image}" onerror="this.src='https://via.placeholder.com/300'" onclick="goToProduct(${p.id})" style="cursor:pointer">
-                <h3>${p.name}</h3>
-                <p class="price">${p.price.toLocaleString()} د.ع</p>
-                <button onclick="goToProduct(${p.id})">عرض التفاصيل</button>
-            </div>
-        `).join('');
-    }
+   // --- الصفحة الرئيسية ---
+// ابحث عن هذا الجزء واستبدله بهذا الكود
+const grid = document.querySelector('.products-grid');
+if (grid) {
+    grid.innerHTML = allProducts.map(p => `
+        <div class="product-card">
+            <img src="${p.image}" onerror="this.src='https://via.placeholder.com/300'" onclick="goToProduct(${p.id})" style="cursor:pointer">
+            <h3>${p.name}</h3>
+            <p class="price">${p.price.toLocaleString()} د.ع</p>
+            <button onclick="goToProduct(${p.id})">عرض التفاصيل</button>
+        </div>
+    `).join('');
+}
 }
 
 function goToProduct(id) {
@@ -444,6 +446,7 @@ function applyCoupon() {
         renderCartPage();
     }
 }
+
 
 
 
