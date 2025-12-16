@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Tajawal', sans-serif; /* تم تحديث الخط للاتساق */
+            font-family: 'Tajawal', sans-serif;
             background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
             height: 100vh;
             display: flex;
@@ -34,7 +34,7 @@
             border-radius: 8px;
             box-sizing: border-box;
             transition: border 0.3s;
-            text-align: left; /* للأرقام */
+            text-align: left;
         }
         .input-group input:focus { border-color: #1abc9c; outline: none; }
         
@@ -49,11 +49,13 @@
             font-size: 16px;
             font-weight: bold;
             transition: background 0.3s;
+            margin-bottom: 10px;
         }
         .btn-primary:hover { background: #1abc9c; }
         
-        .link-text { margin-top: 15px; font-size: 0.9em; }
+        .link-text { margin-top: 15px; font-size: 0.9em; color: #555; }
         .link-text a { color: #1abc9c; text-decoration: none; font-weight: bold; }
+        .recovery-options { border-top: 1px solid #eee; margin-top: 20px; padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -68,22 +70,27 @@
             <label>كلمة المرور</label>
             <input type="password" id="loginPass" placeholder="******" required>
         </div>
+        
         <button onclick="handleLogin()" class="btn-primary">دخول</button>
-        <p class="link-text">
-    نسيت كلمة المرور؟ 
-    <a href="https://wa.me/9647724329890?text=مرحباً، نسيت كلمة السر الخاصة بحسابي، رقم هاتفي هو: " target="_blank">
-        استرجعها عبر واتساب 💬
-    </a>
-</p>
+
+        <div class="recovery-options">
+            <p class="link-text">
+                نسيت كلمة المرور؟<br>
+                <a href="javascript:void(0)" onclick="showMyPassword()" style="color: #e67e22;">كشف الرمز من هذا الجهاز 🔍</a>
+                <br>أو<br>
+                <a href="https://wa.me/9647724329890?text=مرحباً، نسيت كلمة السر، رقمي هو: " target="_blank">
+                    استرجاع عبر واتساب 💬
+                </a>
+            </p>
+        </div>
+
         <p class="link-text">ليس لديك حساب؟ <a href="signup.html">أنشئ حساباً جديداً</a></p>
-        <p class="link-text"><a href="forgot.html">نسيت كلمة المرور؟</a></p>
         <p class="link-text"><a href="index.html">العودة للمتجر</a></p>
     </div>
 
     <script src="script.js"></script>
     
     <script>
-        // دالة التعامل مع الدخول داخل الصفحة لتربطها بـ script.js
         function handleLogin() {
             const phone = document.getElementById('loginPhone').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
@@ -93,36 +100,34 @@
                 return;
             }
 
-            // استدعاء الدالة من ملف script.js (تأكد أنها موجودة هناك)
-            // سأكتب لك المنطق هنا أيضاً لضمان العمل الفوري:
             let users = JSON.parse(localStorage.getItem('registered_users')) || [];
             const user = users.find(u => u.phone === phone && u.password === pass);
 
             if (user) {
                 alert('تم تسجيل الدخول بنجاح! أهلاً بك.');
                 localStorage.setItem('isLoggedIn', 'true');
-localStorage.setItem('userName', user.name || phone);
+                localStorage.setItem('userName', user.name || phone);
                 window.location.href = 'index.html';
             } else {
                 alert('خطأ: رقم الهاتف أو كلمة المرور غير صحيحة!');
             }
-            function showMyPassword() {
-    let phone = prompt("أدخل رقم هاتفك المسجل للتأكد:");
-    let users = JSON.parse(localStorage.getItem('registered_users')) || [];
-    let user = users.find(u => u.phone === phone);
+        }
 
-    if (user) {
-        alert("كلمة السر الخاصة بك هي: " + user.password);
-    } else {
-        alert("هذا الرقم غير مسجل في هذا الجهاز.");
-    }
-}
+        // هذه الدالة يجب أن تكون خارج handleLogin لتعمل بشكل مستقل
+        function showMyPassword() {
+            let phone = prompt("أدخل رقم هاتفك المسجل للتأكد:");
+            if (!phone) return;
+
+            let users = JSON.parse(localStorage.getItem('registered_users')) || [];
+            let user = users.find(u => u.phone === phone);
+
+            if (user) {
+                alert("✅ تم العثور على الحساب!\nكلمة السر الخاصة بك هي: " + user.password);
+            } else {
+                alert("❌ عذراً، هذا الرقم غير مسجل في هذا المتصفح.");
+            }
         }
     </script>
 
 </body>
 </html>
-
-
-
-
