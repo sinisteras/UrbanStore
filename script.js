@@ -356,10 +356,47 @@ function registerUser() {
     window.location.href = 'login.html';
 }
 
-function logoutUser() { 
-    localStorage.removeItem('isLoggedIn'); 
+function logoutUser() {
+    localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userName');
-    window.location.href = 'index.html'; 
+    alert("تم تسجيل الخروج");
+    window.location.reload(); // إعادة تحميل الصفحة لتحديث الأزرار فوراً
 }
+}
+// دالة لتحديث منطقة أزرار الطلب بناءً على حالة الدخول
+function updateCartButtons() {
+    const actionArea = document.getElementById('checkout-action-area');
+    if (!actionArea) return;
+
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (isLoggedIn) {
+        // إذا كان مسجل دخول: يظهر زر الواتساب الأخضر
+        actionArea.innerHTML = `
+            <button onclick="checkoutWhatsApp()" style="width: 100%; padding: 15px; background: #25D366; color: white; border: none; font-weight: bold; font-size: 1.1em; cursor: pointer; border-radius: 5px; margin-top: 15px; transition: 0.3s;">
+                إتمام الطلب عبر واتساب 📱
+            </button>
+        `;
+    } else {
+        // إذا لم يسجل دخول: تظهر رسالة تنبيه وزر ينقله لصفحة الدخول
+        actionArea.innerHTML = `
+            <div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; border: 1px solid #ffeeba; text-align: center; margin-top: 15px;">
+                <p style="margin-bottom: 10px; font-weight: bold; font-size: 0.9em;">يجب تسجيل الدخول لإرسال الطلب 🔐</p>
+                <a href="login.html" style="display: block; background: #2c3e50; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s;">
+                    تسجيل الدخول
+                </a>
+            </div>
+        `;
+    }
+}
+
+// استدعاء الدالة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    // إذا كنا في صفحة السلة
+    if (document.getElementById('cart-items-container')) {
+        updateCartButtons();
+    }
+});
+
 
 
