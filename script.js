@@ -255,16 +255,22 @@ function removeItem(index) {
 }
 function checkoutWhatsApp() {
     if (cart.length === 0) return alert('السلة فارغة!');
-    let msg = "مرحباً، أريد إتمام الطلب:%0a";
-    let total = 0;
-    cart.forEach(item => {
-        let details = "";
-        if (item.size) details += ` (قياس: ${item.size})`;
-        if (item.color) details += ` (لون: ${item.color})`;
-        msg += `- ${item.name} ${details} - عدد ${item.qty}%0a`;
-        total += item.price * item.qty;
+    
+    let msg = "مرحباً Urban Gent، أريد إتمام الطلب التالي:%0a%0a";
+    
+    cart.forEach((item, index) => {
+        msg += `*${index + 1}. ${item.name}*%0a`;
+        if (item.size) msg += `   - القياس: ${item.size}%0a`;
+        if (item.color) msg += `   - اللون: ${item.color}%0a`;
+        msg += `   - الكمية: ${item.qty}%0a`;
+        msg += `   - السعر: ${(item.price * item.qty).toLocaleString()} د.ع%0a%0a`;
     });
-    msg += `%0a💰 الإجمالي: ${document.getElementById('final-total').textContent} د.ع`;
+
+    const finalPrice = document.getElementById('final-total').textContent;
+    msg += `--------------------------%0a`;
+    msg += `💰 *الإجمالي النهائي: ${finalPrice} د.ع*`;
+
+    // فتح واتساب
     window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
 }
 
@@ -314,4 +320,5 @@ function applyCoupon() {
         renderCartPage(); // إعادة السعر للأصل
     }
 }
+
 
