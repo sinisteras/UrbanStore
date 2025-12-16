@@ -175,8 +175,25 @@ window.renderCartPage = function() {
 };
 
 window.changeQty = (index, delta) => {
-    if (cart[index].qty + delta > 0) {
-        cart[index].qty += delta;
+    const item = cart[index];
+    // البحث عن المنتج الأصلي في قاعدة البيانات لجلب المخزن
+    const originalProduct = allProducts.find(p => p.id === item.id);
+    
+    if (originalProduct && originalProduct.inventory) {
+        // العثور على الكمية المتوفرة لهذا القياس واللون تحديداً
+        const variant = originalProduct.inventory.find(v => v.size === item.size && v.color === item.color);
+        const maxStock = variant ? variant.stock : 0;
+
+        // التحقق من الزيادة
+        if (delta > 0 && item.qty + delta > maxStock) {
+            alert(`عذراً، المتوفر من هذا القياس واللون هو ${maxStock} فقط ⚠️`);
+            return;
+        }
+    }
+
+    // التحقق من النقصان (لا يسمح بأقل من 1)
+    if (item.qty + delta > 0) {
+        item.qty += delta;
         localStorage.setItem('myCart', JSON.stringify(cart));
         window.renderCartPage();
         updateCartIcon();
@@ -230,4 +247,5 @@ window.checkoutWhatsApp = async () => {
 
 // تشغيل التطبيق عند التحميل
 document.addEventListener('DOMContentLoaded', initApp);
+
 
