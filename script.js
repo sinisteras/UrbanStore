@@ -398,7 +398,7 @@ async function checkoutWhatsApp() {
     setTimeout(() => {
         window.location.href = 'profile.html';
     }, 1500);
-}
+
 // --- نظام تسجيل الخروج ---
 function logoutUser() {
     localStorage.removeItem('isLoggedIn');
@@ -447,6 +447,7 @@ function applyCoupon() {
         renderCartPage();
     }
 }
+
 
 
 
