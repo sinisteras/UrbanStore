@@ -352,5 +352,27 @@ function recoverPassword() {
         alert("عذراً، هذا الرقم غير مسجل على هذا الجهاز ❌");
     }
 }
+function applyCoupon() {
+    const codeInput = document.getElementById('coupon-code');
+    if (!codeInput) return;
+
+    const code = codeInput.value.trim().toUpperCase();
+    const isUsed = localStorage.getItem('coupon_IQ2025_used');
+
+    if (isUsed === 'true') {
+        alert("عذراً، لقد استخدمت هذا الكود مسبقاً! ❌");
+        return;
+    }
+
+    if (code === "IQ2025") {
+        localStorage.setItem('discount', 0.10); // خصم 10%
+        alert("تهانينا! تم تطبيق خصم 10% بنجاح ✅");
+        renderCartPage(); // إعادة بناء الصفحة لتحديث السعر
+    } else {
+        alert("كود الخصم غير صحيح ❌");
+        localStorage.setItem('discount', 0);
+        renderCartPage();
+    }
+}
 
 
