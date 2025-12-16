@@ -269,8 +269,28 @@ function renderCartPage() {
 }
 
 function changeQty(index, delta) {
-    cart[index].qty += delta;
-    if (cart[index].qty < 1) cart[index].qty = 1;
+    const item = cart[index];
+    const product = allProducts.find(p => p.id === item.id);
+    
+    // البحث عن كمية المخزون المتوفرة لهذا القياس واللون تحديداً
+    const variant = product.inventory.find(v => v.size === item.size && v.color === item.color);
+    const maxStock = variant ? variant.stock : 0;
+
+    if (delta > 0) {
+        // إذا كان الزبون يريد الزيادة، نتحقق من المخزون
+        if (item.qty + delta > maxStock) {
+            alert(`عذراً، المتوفر في المخزون هو ${maxStock} قطع فقط من هذا النوع ⚠️`);
+            return; // توقف، لا تزيد الكمية
+        }
+    }
+
+    // تنفيذ التغيير (زيادة أو نقصان)
+    item.qty += delta;
+
+    // التأكد من أن الكمية لا تقل عن 1
+    if (item.qty < 1) item.qty = 1;
+
+    // حفظ التعديلات وتحديث الصفحة
     localStorage.setItem('myCart', JSON.stringify(cart));
     renderCartPage();
     updateCartIcon();
@@ -374,5 +394,6 @@ function applyCoupon() {
         renderCartPage();
     }
 }
+
 
 
