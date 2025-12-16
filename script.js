@@ -275,6 +275,9 @@ function checkoutWhatsApp() {
         if (pDb?.inventory) {
             const variant = pDb.inventory.find(v => v.size === item.size && v.color === item.color);
             if (variant) variant.stock = Math.max(0, variant.stock - item.qty);
+            if (localStorage.getItem('discount') > 0) {
+        localStorage.setItem('coupon_IQ2025_used', 'true');
+        localStorage.setItem('discount', 0);
         }
     });
 
@@ -289,15 +292,31 @@ function checkoutWhatsApp() {
 
 // كود الخصم
 function applyCoupon() {
-    const code = document.getElementById('coupon-code').value;
-    if (code === "IQ2025") {
-        localStorage.setItem('discount', 0.10);
-        alert("تم تطبيق خصم 10% ✅");
-    } else {
-        localStorage.setItem('discount', 0);
-        alert("كود خاطئ ❌");
+    const codeInput = document.getElementById('coupon-code');
+    const code = codeInput.value.trim();
+    
+    // فحص هل تم استخدام الكود من قبل في هذا المتصفح
+    const isUsed = localStorage.getItem('coupon_IQ2025_used');
+
+    if (isUsed === 'true') {
+        alert("عذراً، لقد استخدمت هذا الكود مسبقاً! ❌");
+        codeInput.value = "";
+        return;
     }
-    renderCartPage();
+
+    if (code === "IQ2025") {
+        // حفظ في الذاكرة أنه استخدم الكود
+        localStorage.setItem('discount', 0.10);
+        
+        alert("تهانينا! تم تطبيق خصم 10% ✅ (صالح لمرة واحدة فقط)");
+        renderCartPage(); // لتحديث السعر فوراً
+    } else if (code === "") {
+        alert("يرجى إدخال كود الخصم");
+    } else {
+        alert("كود الخصم غير صحيح ❌");
+        localStorage.setItem('discount', 0);
+        renderCartPage();
+    }
 }
 
 // تسجيل الدخول
@@ -310,3 +329,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 function logoutUser() { localStorage.clear(); window.location.href = 'index.html'; }
+
