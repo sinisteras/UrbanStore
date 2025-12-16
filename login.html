@@ -95,7 +95,7 @@
             if (user) {
                 alert('تم تسجيل الدخول بنجاح! أهلاً بك.');
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userName', phone);
+localStorage.setItem('userName', user.name || phone);
                 window.location.href = 'index.html';
             } else {
                 alert('خطأ: رقم الهاتف أو كلمة المرور غير صحيحة!');
@@ -105,3 +105,4 @@
 
 </body>
 </html>
+
