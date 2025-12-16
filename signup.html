@@ -79,27 +79,46 @@
         <p class="link-text"><a href="index.html">العودة للمتجر</a></p>
     </div>
 
-    <script>
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // 1. جلب البيانات من الحقول
-            const phone = document.getElementById('phonenumber').value;
-            const password = document.getElementById('password').value;
-            const fullname = document.getElementById('fullname').value;
+<script src="script.js"></script> <script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // جلب البيانات من الحقول بالـ ID الصحيح
+        const phone = document.getElementById('phone').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        const fullname = document.getElementById('fullname').value.trim();
 
-            // 2. حفظ البيانات في ذاكرة المتصفح (localStorage)
-            // ملاحظة: هذا يحاكي قاعدة البيانات
-            localStorage.setItem('userphonenumber', email);
-            localStorage.setItem('userPassword', password);
-            localStorage.setItem('userName', fullname);
+        if (phone.length < 10) {
+            alert("يرجى إدخال رقم هاتف صحيح ❌");
+            return;
+        }
 
-            alert('تم إنشاء الحساب بنجاح! سيتم تحويلك لصفحة الدخول.');
-            window.location.href = 'login.html';
+        // جلب قائمة المستخدمين الحالية أو إنشاء قائمة فارغة
+        let users = JSON.parse(localStorage.getItem('registered_users')) || [];
+
+        // التأكد من أن الرقم غير مسجل مسبقاً
+        if (users.find(u => u.phone === phone)) {
+            alert("هذا الرقم مسجل مسبقاً! ❌");
+            return;
+        }
+
+        // إضافة المستخدم الجديد للقائمة
+        users.push({ 
+            phone: phone, 
+            password: pass, 
+            name: fullname 
         });
-    </script>
+
+        // حفظ القائمة المحدثة
+        localStorage.setItem('registered_users', JSON.stringify(users));
+
+        alert('تم إنشاء الحساب بنجاح! ✅');
+        window.location.href = 'login.html';
+    });
+</script>
 
 </body>
 
 </html>
+
 
