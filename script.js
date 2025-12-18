@@ -1,20 +1,99 @@
-// استيراد Firebase - تأكد أن الربط في HTML هو type="module"
+// 1. استيراد Firebase (تم تصحيح الإصدار ليكون موحداً)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// 2. إعدادات المشروع
 const firebaseConfig = {
-  apiKey: "AIzaSy...", // ضع مفتاحك هنا
-  authDomain: "urban-gent.firebaseapp.com",
-  projectId: "urban-gent",
-  storageBucket: "urban-gent.appspot.com",
-  messagingSenderId: "...",
-  appId: "..."
+    apiKey: "AIzaSy...", // تأكد من وضع مفتاحك الحقيقي هنا
+    authDomain: "urban-gent.firebaseapp.com",
+    projectId: "urban-gent",
+    storageBucket: "urban-gent.appspot.com",
+    messagingSenderId: "...",
+    appId: "..."
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const MY_PHONE_NUMBER = "9647724329890"; 
 
+// 3. دالة جلب المخزون وعرضه في الموقع
+async function loadStock() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const element = document.getElementById(`stock-${doc.id}`);
+            if (element) {
+                element.textContent = data.quantity;
+            }
+        });
+    } catch (error) {
+        console.error("خطأ في جلب المخزون:", error);
+    }
+}
+
+// 4. دالة تنقيص المخزون بعد الشراء
+async function updateStockAfterPurchase(productId, purchasedQty) {
+    try {
+        // التأكد من تحويل الـ ID إلى نص String لأن فايبربيس لا يقبل الأرقام في doc()
+        const idAsString = String(productId);
+        const productRef = doc(db, "products", idAsString);
+        const productSnap = await getDoc(productRef);
+        
+        if (productSnap.exists()) {
+            const currentQty = productSnap.data().quantity;
+            // تحويل الكمية إلى رقم للتأكد من عملية الطرح
+            const newQty = Number(currentQty) - Number(purchasedQty);
+            
+            if (newQty >= 0) {
+                await updateDoc(productRef, { quantity: newQty });
+                console.log(`تم تحديث مخزون المنتج ${idAsString} بنجاح`);
+            } else {
+                console.warn(`المخزون غير كافٍ للمنتج ${idAsString}`);
+            }
+        } else {
+            console.error(`عذراً، المنتج رقم (${idAsString}) غير موجود في قاعدة بيانات Firebase`);
+        }
+    } catch (error) {
+        console.error("خطأ تقني في تحديث الوثيقة:", error);
+        throw error; // لكي يظهر الخطأ في handleCheckout أيضاً
+    }
+}
+
+// 5. دالة معالجة الطلب النهائي (الواتساب + المخزون)
+async function handleCheckout(cart, userDetails) {
+    try {
+        // أ. تنقيص المخزون لكل منتج في السلة
+        for (const item of cart) {
+            await updateStockAfterPurchase(item.id, item.quantity);
+        }
+
+        // ب. تحديث الأرقام المعروضة في الشاشة فوراً
+        await loadStock();
+
+        // ج. إنشاء رسالة الواتساب
+        let message = `طلب جديد من متجر أوربان:\n`;
+        message += `الاسم: ${userDetails.name}\n`;
+        cart.forEach(item => {
+message += `- ${item.name} (كمية: ${item.qty})\n`;
+        });
+
+        // د. فتح الواتساب
+        const whatsappUrl = `https://wa.me/${MY_PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+
+    } catch (error) {
+        console.error("حدث خطأ أثناء معالجة الطلب:", error);
+        alert("عذراً، حدث خطأ في تحديث المخزون.");
+    }
+}
+
+// 6. تشغيل جلب المخزون فور فتح الصفحة
+window.addEventListener('DOMContentLoaded', loadStock);
+
+// ربط الدوال بـ window لتعمل مع HTML
+window.handleCheckout = handleCheckout;
+window.loadStock = loadStock;
 // 📦 1. قاعدة البيانات
 const allProducts = [
     { id: 1, name: "بدلة رسمية سوداء", price: 150000, image: "images/suit.jpg", description: "بدلة رسمية فاخرة.", sizes: ["48", "50", "52"], colors: ["أسود"], inventory: [{ size: "48", color: "أسود", stock: 5 }, { size: "50", color: "أسود", stock: 3 }, { size: "52", color: "أسود", stock: 1 }], gallery: ["images/suit.jpg", "images/suit_back.jpg", "images/suit_fabric.jpg"] },
@@ -290,7 +369,23 @@ localStorage.setItem('orderHistory', JSON.stringify(history));
         alert("حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.");
     }
 };
-// تشغيل التطبيق عند التحميل
+async function processOrder() {
+    // التعديل: غيرنا cart إلى myCart لكي تتطابق مع دالة الإضافة
+    const rawCart = localStorage.getItem('myCart'); 
+    const cartData = rawCart ? JSON.parse(rawCart) : [];
+
+    if (cartData.length === 0) {
+        alert("عذراً، سلتك فارغة! أضف بعض المنتجات أولاً.");
+        return;
+    }
+
+    // استدعاء handleCheckout وإرسال البيانات لها
+    const userName = localStorage.getItem('userName') || "زبون أوربان";
+    await handleCheckout(cartData, { name: userName });
+}
+
+// اجعلها متاحة للمتصفح
+window.processOrder = processOrder;// تشغيل التطبيق عند التحميل
 document.addEventListener('DOMContentLoaded', initApp);
 
 
