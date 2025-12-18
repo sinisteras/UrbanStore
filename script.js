@@ -225,48 +225,55 @@ window.logoutUser = () => {
     localStorage.removeItem('userName');
     window.location.href = 'index.html';
 };
-
 window.checkoutWhatsApp = async () => {
     const user = localStorage.getItem('userName');
+    const phone = localStorage.getItem('userPhone') || "غير متوفر";
+    // جلب العنوان الذي كتبه الزبون
+    const address = document.getElementById('user-address').value;
+
     if (!user) return alert("يرجى تسجيل الدخول أولاً 🔐");
     if (cart.length === 0) return alert('السلة فارغة!');
+    
+    // منع الزبون من ترك العنوان فارغاً
+    if (!address.trim()) {
+        return alert("يرجى كتابة العنوان أولاً لنتمكن من توصيل الطلب 📍");
+    }
 
     const finalTotal = document.getElementById('final-total')?.textContent;
 
-    // 1. تجميع تفاصيل المنتجات في نص واحد
+    // تجميع قائمة المنتجات
     let productsList = cart.map(item => 
-        `- ${item.name} (${item.size}/${item.color}) عدد: ${item.qty}`
-    ).join('%0a'); // %0a تعني سطر جديد في الواتساب
+        `- ${item.name} (${item.size}/${item.color}) x ${item.qty}`
+    ).join('%0a');
 
-    // 2. تجهيز نص الرسالة بالكامل
+    // تجهيز الرسالة الكاملة (تضم العنوان والرقم)
     let msg = `🛍️ *طلب جديد من Urban Gent*%0a%0a` +
               `👤 *الزبون:* ${user}%0a` +
+              `📞 *الهاتف:* ${phone}%0a` +
+              `📍 *العنوان:* ${address}%0a%0a` + // هنا سيظهر العنوان الذي كتبه الزبون
               `📦 *الطلبات:*%0a${productsList}%0a%0a` +
               `💰 *الإجمالي النهائي: ${finalTotal} د.ع*`;
 
-    // 3. تخزين الطلب في Firebase (اختياري لكن مفيد)
+    // تخزين في فايربيس (اختياري)
     try {
         await addDoc(collection(db, "orders"), {
             customerName: user,
+            customerPhone: phone,
+            customerAddress: address,
             items: cart,
             total: finalTotal,
             date: new Date().toLocaleString()
         });
-    } catch (e) { console.error("Firebase Error:", e); }
+    } catch (e) { console.error(e); }
 
-    // 4. تصفير السلة والخصم
+    // تنظيف السلة وفتح الواتساب
     localStorage.removeItem('myCart');
     localStorage.removeItem('discount');
-    
-    // 5. فتح الواتساب بالرسالة الجديدة
     window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
     
-    // إعادة توجيه للرئيسية بعد فترة قصيرة
     setTimeout(() => { window.location.href = 'index.html'; }, 1000);
 };
-
 // تشغيل التطبيق عند التحميل
 document.addEventListener('DOMContentLoaded', initApp);
-
 
 
