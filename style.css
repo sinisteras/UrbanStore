@@ -5,7 +5,7 @@ body {
 }
     margin: 0;
     padding: 0;
-    background-color: #ecf0f1; /* خلفية رمادية فاتحة جداً */
+    background-color: #e4e4e4; /* خلفية رمادية فاتحة جداً */
     color: #2c3e50; /* لون النصوص الأساسي داكن */
     direction: rtl;
     text-align: right;
@@ -17,7 +17,7 @@ a { text-decoration: none; color: inherit; transition: color 0.3s; }
 
 /* --- تصميم الهيدر (الشريط العلوي) --- */
 header {
-    background-color: #2c3e50; /* لون خلفية الهيدر داكن */
+    background-color: #000000; /* لون خلفية الهيدر داكن */
     color: #fff;
     padding: 15px 30px;
     display: flex;
@@ -51,25 +51,25 @@ nav a {
 }
 
 nav a:hover {
-    color: #1abc9c; /* لون التمييز عند المرور */
+    color: #f7d518; /* لون التمييز عند المرور */
 }
 
 /* تنسيق زر الدخول المميز في القائمة */
 nav a.login-btn {
-    background-color: #1abc9c;
+    background-color: #f1db12;
     color: white !important;
     padding: 8px 15px;
     border-radius: 20px;
     transition: background-color 0.3s;
 }
 nav a.login-btn:hover {
-    background-color: #16a085;
+    background-color: #f8e809;
 }
 
 /* --- أيقونة السلة --- */
 #cart-container {
     font-size: 1.5em;
-    color: #fff;
+    color: #f7e011;
     position: relative;
     padding: 0 10px;
 }
@@ -107,7 +107,7 @@ main h2::after {
     display: block;
     width: 60px;
     height: 3px;
-    background-color: #1abc9c;
+    background-color: #f7d518;
     margin: 10px auto 0;
 }
 
@@ -140,7 +140,7 @@ main h2::after {
     width: 100%;
     height: 250px; /* ارتفاع ثابت للصور */
     object-fit: cover; /* لملء المساحة دون تشويه الصورة */
-    border-bottom: 3px solid #1abc9c; /* خط لوني تحت الصورة */
+    border-bottom: 3px solid #f7d518; /* خط لوني تحت الصورة */
 }
 
 .product-info {
@@ -154,18 +154,18 @@ main h2::after {
 .product-card h3 {
     margin: 0 0 10px;
     font-size: 1.2em;
-    color: #2c3e50;
+    color: #000000;
 }
 
 .product-card .price {
-    color: #1abc9c; /* لون السعر مميز */
+    color: #000000; /* لون السعر مميز */
     font-size: 1.3em;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
 .product-card button {
-    background-color: #2c3e50; /* لون الزر داكن */
+    background-color: #050504; /* لون الزر داكن */
     color: white;
     border: none;
     padding: 12px 20px;
@@ -178,13 +178,13 @@ main h2::after {
 }
 
 .product-card button:hover {
-    background-color: #1abc9c; /* يتغير للون التمييز عند المرور */
+    background-color: #f7d518; /* يتغير للون التمييز عند المرور */
     transform: scale(1.02);
 }
 
 /* --- التذييل (Footer) --- */
 footer {
-    background-color: #2c3e50;
+    background-color: #000000;
     color: #bdc3c7;
     text-align: center;
     padding: 20px 0;
@@ -213,4 +213,254 @@ footer {
         width: 90%;
     }
 
+}
+/* الحاوية الكبيرة */
+.shipping-info-container {
+    background: #1c1f26; /* الأسود الفاتح المنسجم مع الموقع */
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    margin: 30px 0;
+    text-align: right;
+}
+
+.info-title {
+    color: #d4af37; /* ذهبي اللوجو */
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+/* توزيع الاسم والهاتف */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* تنسيق الحقل الواحد */
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-field label {
+    color: #b0b0b0;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* تنسيق الإدخال (Input & Textarea) */
+.input-field input, 
+.input-field textarea {
+    background: #f7d518 !important; /* الأسود العميق */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    padding: 12px 15px !important;
+    border-radius: 10px !important;
+    font-family: 'Tajawal', sans-serif;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.input-field textarea {
+    height: 100px;
+    resize: none; /* لمنع الزبون من تخريب شكل الصفحة */
+}
+
+/* تأثير عند الضغط */
+.input-field input:focus, 
+.input-field textarea:focus {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+}
+
+/* تجاوب الجوال */
+@media (max-width: 600px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* --- تصميم زر تأكيد الطلب الفاخر --- */
+.checkout-btn {
+    width: 100%;
+    background: linear-gradient(45deg, #d4af37, #f2d06b) !important; /* تدرج ذهبي ملكي */
+    color: #000000 !important; /* نص أسود لتباين عالي */
+    border: none !important;
+    padding: 18px 30px !important;
+    font-size: 1.2rem !important;
+    font-weight: 800 !important;
+    font-family: 'Tajawal', sans-serif !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px; /* مسافة بين النص والأيقونة */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2) !important;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+/* تأثير اللمعان المتحرك على الزر */
+.checkout-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+/* حركة الزر عند التأشير عليه */
+.checkout-btn:hover {
+    transform: translateY(-5px) scale(1.02) !important; /* يرتفع قليلاً */
+    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4) !important; /* تزيد الإضاءة تحت الزر */
+    letter-spacing: 1px;
+}
+
+.checkout-btn:active {
+    transform: translateY(2px) !important; /* ينضغط عند النقر */
+}
+
+/* إضافة أيقونة الواتساب بجانب النص (اختياري عبر HTML) */
+.checkout-btn i {
+    font-size: 1.4rem;
+}
+/* --- 1. تنسيق صف جدول السلة --- */
+tr {
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1) !important;
+    transition: 0.3s;
+}
+
+tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* --- 2. أزرار التحكم بالكمية في السلة --- */
+.cart-qty-control {
+    display: inline-flex;
+    align-items: center;
+    background: #121418;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.cart-qty-btn {
+    background: transparent !important;
+    color: #d4af37 !important;
+    border: none !important;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.cart-qty-btn:hover {
+    background: rgba(212, 175, 55, 0.1) !important;
+    border-radius: 5px;
+}
+
+.cart-qty-num {
+    color: #fff;
+    padding: 0 12px;
+    font-weight: 700;
+    min-width: 25px;
+    text-align: center;
+}
+
+/* --- 3. زر الحذف (سلة المهملات) --- */
+.remove-item-btn {
+    background: transparent !important;
+    color: #e74c3c !important; /* لون أحمر هادئ للحذف */
+    border: 1px solid rgba(231, 76, 60, 0.3) !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-item-btn:hover {
+    background: #e74c3c !important;
+    color: #fff !important;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+/* تنسيق صورة المنتج المصغرة في السلة */
+.cart-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+/* --- تصميم أزرار الكمية الموحد والفخم --- */
+.cart-qty-control {
+    display: inline-flex !important;
+    align-items: center !important;
+    background-color: #000000 !important; /* خلفية سوداء عميقة */
+    border: 1px solid #f0c023 !important; /* إطار ذهبي رقيق */
+    border-radius: 10px !important;
+    padding: 4px 8px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.cart-qty-btn {
+    background: none !important;
+    color: #f7d518 !important; /* لون ذهبي */
+    border: none !important;
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 1.4rem !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    border-radius: 6px !important;
+}
+
+.cart-qty-btn:hover {
+    background-color: rgba(212, 175, 55, 0.15) !important; /* توهج ذهبي خفيف عند المرور */
+    transform: scale(1.1);
+}
+
+.cart-qty-btn:active {
+    transform: scale(0.9);
+}
+
+.cart-qty-num {
+    color: #ffffff !important;
+    font-family: 'Tajawal', sans-serif !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    padding: 0 15px !important;
+    min-width: 30px !important;
+    text-align: center !important;
+}
+
+/* --- إصلاح سريع للون حقول الإدخال ليتناسق مع الذهب --- */
+.input-field input, 
+.input-field textarea {
+    background: #f5e65e !important; /* استبدال الأزرق بالأسود ليتناسق مع السلة */
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    color: #ffffff !important;
 }

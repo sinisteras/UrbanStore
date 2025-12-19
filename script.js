@@ -63,31 +63,50 @@ async function updateStockAfterPurchase(productId, purchasedQty) {
 // 5. دالة معالجة الطلب النهائي (الواتساب + المخزون)
 async function handleCheckout(cart, userDetails) {
     try {
-        // أ. تنقيص المخزون لكل منتج في السلة
+        // --- القسم الأول: كودك الأصلي (لا نلمسه لأنه مستقر) ---
         for (const item of cart) {
-            await updateStockAfterPurchase(item.id, item.quantity);
+            await updateStockAfterPurchase(item.id, item.qty);
         }
-
-        // ب. تحديث الأرقام المعروضة في الشاشة فوراً
         await loadStock();
 
-        // ج. إنشاء رسالة الواتساب
-        let message = `طلب جديد من متجر أوربان:\n`;
-        message += `الاسم: ${userDetails.name}\n`;
+        // --- القسم الثاني: تعديل الرسالة فقط (الإضافات الجديدة) ---
+        // نضمن جلب البيانات من الحقول إذا لم تكن موجودة في userDetails
+       const nameInput = document.getElementById('customer-name')?.value;
+        const phoneInput = document.getElementById('customer-phone')?.value;
+        const addressInput = document.getElementById('customer-address')?.value;
+
+        // التحقق من أن البيانات تم سحبها فعلياً، وإذا لم توجد نستخدم userDetails كخيار ثاني
+        const customerName = nameInput || userDetails?.name || "لم يذكر";
+        const customerPhone = phoneInput || userDetails?.phone || "لم يذكر";
+        const customerAddress = addressInput || userDetails?.address || "لم يذكر";
+        let message = `*طلب جديد من متجر URBAN GENT* 🧥%0A%0A`;
+        message += `*👤 الاسم:* ${customerName}%0A`;
+        message += `*📞 الهاتف:* ${customerPhone}%0A`;
+        message += `*📍 العنوان:* ${customerAddress}%0A%0A`;
+        
+        message += `*📦 المنتجات:*%0A`;
+
+        let totalAmount = 0;
         cart.forEach(item => {
-message += `- ${item.name} (كمية: ${item.qty})\n`;
+            // تفاصيل القياس واللون تضاف فقط إذا كانت موجودة في السلة
+            const size = item.size ? ` [قياس: ${item.size}]` : "";
+            const color = item.color ? ` [لون: ${item.color}]` : "";
+            
+            message += `- ${item.name}${size}${color} (الكمية: ${item.qty})%0A`;
+            totalAmount += (item.price * item.qty);
         });
 
-        // د. فتح الواتساب
-        const whatsappUrl = `https://wa.me/${MY_PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+        message += `%0A*💰 المبلغ الإجمالي:* ${totalAmount.toLocaleString()} د.ع`;
+
+        // --- القسم الثالث: فتح الواتساب بنصك الجديد ---
+        const whatsappUrl = `https://wa.me/${MY_PHONE_NUMBER}?text=${message}`;
         window.open(whatsappUrl, '_blank');
 
     } catch (error) {
         console.error("حدث خطأ أثناء معالجة الطلب:", error);
-        alert("عذراً، حدث خطأ في تحديث المخزون.");
+        alert("عذراً، حدث خطأ في معالجة الطلب.");
     }
 }
-
 // 6. تشغيل جلب المخزون فور فتح الصفحة
 window.addEventListener('DOMContentLoaded', loadStock);
 
@@ -239,12 +258,20 @@ window.renderCartPage = function() {
                 <td><img src="${item.image}" width="50"></td>
                 <td>${item.name}<br><small>${item.size} | ${item.color}</small></td>
                 <td>${item.price.toLocaleString()}</td>
-                <td>
-                    <button onclick="window.changeQty(${index}, -1)">-</button>
-                    ${item.qty}
-                    <button onclick="window.changeQty(${index}, 1)">+</button>
-                </td>
-                <td><button onclick="window.removeItem(${index})">❌</button></td>
+               <td>
+    <div class="cart-qty-control">
+        <button class="cart-qty-btn" onclick="window.changeQty(${index}, 1)">+</button>
+        
+        <span class="cart-qty-num">${item.qty}</span>
+        
+        <button class="cart-qty-btn" onclick="window.changeQty(${index}, -1)">-</button>
+    </div>
+</td>
+               <td>
+                <button class="remove-item-btn" onclick="removeFromCart('${item.id}')">
+                    🗑️
+                </button>
+            </td>
             </tr>`;
     }).join('');
 
