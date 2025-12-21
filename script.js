@@ -268,9 +268,9 @@ window.renderCartPage = function() {
     </div>
 </td>
                <td>
-                <button class="remove-item-btn" onclick="removeFromCart('${item.id}')">
-                    🗑️
-                </button>
+               <button class="remove-item-btn" onclick="window.removeItem(${index})">
+                        🗑️
+                    </button>
             </td>
             </tr>`;
     }).join('');
@@ -303,6 +303,7 @@ window.changeQty = (index, delta) => {
         localStorage.setItem('myCart', JSON.stringify(cart));
         window.renderCartPage();
         updateCartIcon();
+        console.log("تم حذف المنتج وتحديث السلة");
     }
 };
 
